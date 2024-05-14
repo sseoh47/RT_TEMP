@@ -7,14 +7,15 @@ from beacon import scan_for_beacons, found_beacon
 class Client():
     def __init__(self):
         self.running = True
+        self.host = "172.20.10.4"  # 서버의 IP 주소
+        self.port = 8888  # 서버의 포트 번호
 
     def send_data_to_server(self, data):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                sock.connect(("172.20.10.4", 8888))
+                sock.connect((self.host, self.port))
                 sock.sendall(json.dumps(data).encode())
-                response = sock.recv(1024).decode()
-                print(f"Received from server: {response}")
+                # 서버로부터의 즉각적인 응답을 기다리지 않음
         except Exception as e:
             print(f"Could not send data to server: {e}")
 
@@ -38,17 +39,40 @@ class Client():
             print(f"Error during beacon scanning: {e}")
             self.running = False
 
+    def listen_for_responses(self):
+        """서버로부터 응답을 지속적으로 받는 메소드"""
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                sock.connect((self.host, self.port))
+                sock.settimeout(None)  # 소켓의 타임아웃을 None으로 설정하여 무한 대기
+                while self.running:
+                    response = sock.recv(1024).decode()  # 서버로부터 응답 수신
+                    if response:
+                        print(f"Received from server: {response}")  # 수신된 응답 출력
+                    else:
+                        break  # 서버로부터의 연결이 끊어졌을 경우 while 문을 종료
+        except Exception as e:
+            print(f"Error receiving data from server: {e}")
+
+    def start(self):
+        """클라이언트 시작 메소드"""
+        sender_thread = threading.Thread(target=self.data_sender)
+        scanner_thread = threading.Thread(target=self.beacon_scanner)
+        response_thread = threading.Thread(target=self.listen_for_responses)
+
+        sender_thread.start()
+        scanner_thread.start()
+        response_thread.start()
+
+        try:
+            while sender_thread.is_alive() or scanner_thread.is_alive() or response_thread.is_alive():
+                sender_thread.join(timeout=1)
+                scanner_thread.join(timeout=1)
+                response_thread.join(timeout=1)
+        except KeyboardInterrupt:
+            print("Program terminated")
+            self.running = False
+
 if __name__ == '__main__':
     client = Client()
-    sender_thread = threading.Thread(target=client.data_sender)
-    scanner_thread = threading.Thread(target=client.beacon_scanner)
-    sender_thread.start()
-    scanner_thread.start()
-
-    try:
-        while sender_thread.is_alive() or scanner_thread.is_alive():
-            sender_thread.join(timeout=1)
-            scanner_thread.join(timeout=1)
-    except KeyboardInterrupt:
-        print("Program terminated")
-        client.running = False
+    client.start()
