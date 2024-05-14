@@ -14,9 +14,9 @@ class ScanDelegate(DefaultDelegate):
     def handleDiscovery(self, dev, isNewDev, isNewData):
         for (adtype, desc, value) in dev.getScanData():
             if adtype == 9 and value == desired_name:
-                print("Desired Beacon found:")
-                print("Name:", value)
-                print("RSSI:", dev.rssi)
+                # print("Desired Beacon found:")
+                # print("Name:", value)
+                # print("RSSI:", dev.rssi)
                 # 전역 변수에 정보 저장
                 found_beacon["name"] = value
                 found_beacon["rssi"] = dev.rssi

@@ -10,6 +10,7 @@ class Client():
         self.host = "172.20.10.4"  # 서버의 IP 주소
         self.port = 8888  # 서버의 포트 번호
         # 소켓 생성 및 서버에 연결
+        # [OS ERROR 10038] 소켓으로 인한 에러 해결 -> 연결 지속하기에 소켓 하나만 사용하기로
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
 
