@@ -2,6 +2,7 @@ import pyaudio
 import wave
 import threading
 import RPi.GPIO as GPIO
+from client import Bus_Finder
 
 
 CHUNK = 1024
@@ -44,6 +45,9 @@ def Start_Recording():
     wf.setframerate(RATE)
     wf.writeframes(b''.join(frames))
     wf.close()
+
+"""
+"""
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
