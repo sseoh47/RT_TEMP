@@ -32,7 +32,6 @@ class Server:
                 if not data:
                     break
                 data = json.loads(data)  # json 문자열을 Python 사전으로 변환
-                print("-------------------------------------------\n")
                 print(f"Received: {data}")
                 # 데이터 변경 확인 및 처리
                 self.data_changed(data)
