@@ -2,15 +2,13 @@ import socket
 import threading
 import json
 import time
-from beacon import scan_for_beacons
+from beacon import scan_for_beacons, found_beacon
 
-class Client:
+class Client():
     def __init__(self):
         self.running = True
         self.host = "172.20.10.4"  # 서버의 IP 주소
         self.port = 8888  # 서버의 포트 번호
-        self.found_beacon = {"bname": None, "rssi": None}  # 키 이름을 'bname'으로 변경
-        self.lock = threading.Lock()  # found_beacon에 대한 접근을 동기화하기 위한 Lock 객체 생성
 
     def send_data_to_server(self, data):
         try:
@@ -21,29 +19,22 @@ class Client:
         except Exception as e:
             print(f"Could not send data to server: {e}")
 
-    def update_beacon(self, bname, rssi):
-        with self.lock:  # found_beacon 사전에 안전하게 접근하기 위해 Lock 사용
-            self.found_beacon["bname"] = bname
-            self.found_beacon["rssi"] = rssi
-
     def data_sender(self):
         while self.running:
-            with self.lock:
-                if self.found_beacon["bname"] is not None:
-                    data = {
-                        "bname": self.found_beacon["bname"],
-                        "rssi": self.found_beacon["rssi"],
-                        "dest": None,
-                        "busNum": -1
-                    }
-                    self.send_data_to_server(data)
+            if found_beacon["name"] is not None:
+                data = {
+                    "bname": found_beacon["name"],
+                    "rssi": found_beacon["rssi"],
+                    "dest": None,
+                    "busNum": -1
+                }
+                self.send_data_to_server(data)
             time.sleep(1)
 
     def beacon_scanner(self):
         try:
             while self.running:
-                bname, rssi = scan_for_beacons()  # scan_for_beacons 함수가 비콘의 이름과 rssi를 반환한다고 가정
-                self.update_beacon(bname, rssi)
+                scan_for_beacons()
         except Exception as e:
             print(f"Error during beacon scanning: {e}")
             self.running = False
