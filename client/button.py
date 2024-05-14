@@ -2,7 +2,7 @@ import pyaudio
 import wave
 import threading
 import RPi.GPIO as GPIO
-
+from client import*
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -15,7 +15,7 @@ frames = []
 recording = False
 
 def Start_Recording():
-    global frames
+    global frames, recording
     frames = []
 
     p = pyaudio.PyAudio()
@@ -44,6 +44,10 @@ def Start_Recording():
     wf.setframerate(RATE)
     wf.writeframes(b''.join(frames))
     wf.close()
+
+    # 녹음 완료 후 파일 전송
+    if global_record:  # global_client가 None이 아니라면
+        global_record.send_file_to_server(WAVE_OUTPUT_FILENAME)
 
 """
 """

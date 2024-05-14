@@ -5,8 +5,11 @@ import time
 from beacon import scan_for_beacons, found_beacon
 from button import*
 
+global_record=None
+
 class Client():
     def __init__(self):
+        global global_record
         self.running = True
         self.host = "172.20.10.4"  # 서버의 IP 주소
         self.port = 8888  # 서버의 포트 번호
@@ -14,6 +17,19 @@ class Client():
         # [OS ERROR 10038] 소켓으로 인한 에러 해결 -> 연결 지속하기에 소켓 하나만 사용하기로
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
+
+    # 서버로 녹음 파일 전송 메소드 추가
+    def send_file_to_server(self, filename):
+        with open(filename, 'rb') as f:
+            file_data = f.read()
+        data = {
+            "bname": None,
+            "rssi": None,
+            "dest": None,
+            "busNum": -1,
+            "FILE": file_data.hex()  # 파일 데이터를 16진수 문자열로 변환
+        }
+        self.send_data_to_server(data)
 
     def send_data_to_server(self, data):
         try:
