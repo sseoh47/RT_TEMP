@@ -9,13 +9,14 @@ class Client():
         self.running = True
         self.host = "172.20.10.4"  # 서버의 IP 주소
         self.port = 8888  # 서버의 포트 번호
+        # 소켓 생성 및 서버에 연결
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((self.host, self.port))
 
     def send_data_to_server(self, data):
         try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                sock.connect((self.host, self.port))
-                sock.sendall(json.dumps(data).encode())
-                # 서버로부터의 즉각적인 응답을 기다리지 않음
+            self.sock.sendall(json.dumps(data).encode())
+            # 서버로부터의 즉각적인 응답을 기다리지 않음
         except Exception as e:
             print(f"Could not send data to server: {e}")
 
@@ -40,22 +41,19 @@ class Client():
             self.running = False
 
     def listen_for_responses(self):
-        """서버로부터 응답을 지속적으로 받는 메소드"""
         try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                sock.connect((self.host, self.port))
-                sock.settimeout(None)  # 소켓의 타임아웃을 None으로 설정하여 무한 대기
-                while self.running:
-                    response = sock.recv(1024).decode()  # 서버로부터 응답 수신
-                    if response:
-                        print(f"Received from server: {response}")  # 수신된 응답 출력
-                    else:
-                        break  # 서버로부터의 연결이 끊어졌을 경우 while 문을 종료
+            self.sock.settimeout(None)  # 소켓의 타임아웃을 None으로 설정하여 무한 대기
+            while self.running:
+                response = self.sock.recv(1024).decode()  # 서버로부터 응답 수신
+                if response:
+                    print(f"Received from server: {response}")  # 수신된 응답 출력
+                else:
+                    break  # 서버로부터의 연결이 끊어졌을 경우 while 문을 종료
         except Exception as e:
             print(f"Error receiving data from server: {e}")
 
     def start(self):
-        """클라이언트 시작 메소드"""
+        # 클라이언트 시작 메소드
         sender_thread = threading.Thread(target=self.data_sender)
         scanner_thread = threading.Thread(target=self.beacon_scanner)
         response_thread = threading.Thread(target=self.listen_for_responses)
@@ -72,6 +70,7 @@ class Client():
         except KeyboardInterrupt:
             print("Program terminated")
             self.running = False
+            self.sock.close()  # 프로그램 종료 시 소켓 닫기
 
 if __name__ == '__main__':
     client = Client()
