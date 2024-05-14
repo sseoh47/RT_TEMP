@@ -3,6 +3,7 @@ import threading
 import json
 import time
 from beacon import scan_for_beacons, found_beacon
+from button import*
 
 class Client():
     def __init__(self):
@@ -28,7 +29,8 @@ class Client():
                     "bname": found_beacon["name"],
                     "rssi": found_beacon["rssi"],
                     "dest": None,
-                    "busNum": -1
+                    "busNum": -1,
+                    "FILE": None
                 }
                 self.send_data_to_server(data)
             time.sleep(1)
