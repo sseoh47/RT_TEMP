@@ -31,12 +31,12 @@ def scan_for_beacons():
     else:
         return None
 
-try:
-    while True:
-        print("Scanning...")
-        result = scan_for_beacons()
-        if result:
-            print(f"Found Beacon: {result}")
-        time.sleep(1)  # 필요에 따라 스캔 간에 잠시 대기할 수 있음
-except KeyboardInterrupt:
-    print("Scanning stopped")
+# try:
+#     while True:
+#         print("Scanning...")
+#         result = scan_for_beacons()
+#         if result:
+#             print(f"Found Beacon: {result}")
+#         time.sleep(1)  # 필요에 따라 스캔 간에 잠시 대기할 수 있음
+# except KeyboardInterrupt:
+#     print("Scanning stopped")
