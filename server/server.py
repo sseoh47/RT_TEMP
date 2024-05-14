@@ -28,7 +28,7 @@ class Server:
 
     def start_server(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind(('127.0.0.1', 8888))
+        server_socket.bind(("172.20.10.4", 8888))
         server_socket.listen()
         print("Server started. Waiting for client connections...")
 

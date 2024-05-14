@@ -11,7 +11,7 @@ class Client():
 
     def send_data_to_server(self, data):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.connect(('127.0.0.1', 8888))
+            sock.connect(("172.20.10.4", 8888))
             sock.sendall(json.dumps(data).encode())  # Python 사전을 json 문자열로 변환하여 전송
             response = sock.recv(1024).decode()
             print(f"Received from server: {response}")
