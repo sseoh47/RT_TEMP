@@ -2,7 +2,6 @@ import pyaudio
 import wave
 import threading
 import RPi.GPIO as GPIO
-from client import Bus_Finder
 
 
 CHUNK = 1024
