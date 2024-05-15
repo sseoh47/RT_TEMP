@@ -3,7 +3,9 @@ import threading
 import json
 import time
 from beacon import scan_for_beacons, found_beacon
-from button import*
+
+
+global_record=None
 
 class Client():
     def __init__(self):
