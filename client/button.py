@@ -49,23 +49,22 @@ def Start_Recording():
 
 """
 
-def record():
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-    try:
-        while True:
-            button_state = GPIO.input(BUTTON_PIN)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+try:
+    while True:
+        button_state = GPIO.input(BUTTON_PIN)
             ####
-            if button_state == False and not recording:  # 버튼이 눌렸고 녹음 중이 아니면 녹음 시작
-                recording = True
-                thread = threading.Thread(target=Start_Recording)
-                thread.start()
-            elif button_state == True and recording:  # 버튼이 떼어지고 녹음 중이면 녹음 종료
-                recording = False
-                thread.join()  # 녹음 스레드가 종료될 때까지 기다립니다.
-                break
+        if button_state == False and not recording:  # 버튼이 눌렸고 녹음 중이 아니면 녹음 시작
+            recording = True
+            thread = threading.Thread(target=Start_Recording)
+            thread.start()
+        elif button_state == True and recording:  # 버튼이 떼어지고 녹음 중이면 녹음 종료
+            recording = False
+            thread.join()  # 녹음 스레드가 종료될 때까지 기다립니다.
+            break
 
-    except KeyboardInterrupt:
-        GPIO.cleanup()  # 프로그램 종료 시 GPIO 설정 초기화
+except KeyboardInterrupt:
+    GPIO.cleanup()  # 프로그램 종료 시 GPIO 설정 초기화
