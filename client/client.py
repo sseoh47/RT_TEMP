@@ -56,9 +56,14 @@ class Client():
             print(f"Error receiving data from server: {e}")
 
     def check_bname(self, response):
-        if response['bname'] == 'BUS':
-            record()
-
+        try:
+            data = json.loads(response)  # 문자열을 Python 사전으로 변환
+            if data['bname'] == 'BUS':
+                record()
+        except json.JSONDecodeError:
+            print("JSON 디코딩 실패: 응답이 JSON 형식이 아닙니다.")
+        except KeyError:
+            print("키 오류: 'bname' 키가 없습니다.")
 
     def start(self):
         # 클라이언트 시작 메소드
