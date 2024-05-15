@@ -2,7 +2,8 @@ import pyaudio
 import wave
 import threading
 import RPi.GPIO as GPIO
-from client import*
+from client import Bus_Finder
+
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -15,7 +16,7 @@ frames = []
 recording = False
 
 def Start_Recording():
-    global frames, recording
+    global frames
     frames = []
 
     p = pyaudio.PyAudio()
@@ -45,27 +46,27 @@ def Start_Recording():
     wf.writeframes(b''.join(frames))
     wf.close()
 
-    # 녹음 완료 후 파일 전송
-    if global_record:  # global_client가 None이 아니라면
-        global_record.send_file_to_server(WAVE_OUTPUT_FILENAME)
-
-"""
 """
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+"""
 
-try:
-    while True:
-        button_state = GPIO.input(BUTTON_PIN)
-        if button_state == False and not recording:  # 버튼이 눌렸고 녹음 중이 아니면 녹음 시작
-            recording = True
-            thread = threading.Thread(target=Start_Recording)
-            thread.start()
-        elif button_state == True and recording:  # 버튼이 떼어지고 녹음 중이면 녹음 종료
-            recording = False
-            thread.join()  # 녹음 스레드가 종료될 때까지 기다립니다.
-            break
+def record():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-except KeyboardInterrupt:
-    GPIO.cleanup()  # 프로그램 종료 시 GPIO 설정 초기화
+    try:
+        while True:
+            button_state = GPIO.input(BUTTON_PIN)
+            
+            ####
+            if button_state == False and not recording:  # 버튼이 눌렸고 녹음 중이 아니면 녹음 시작
+                recording = True
+                thread = threading.Thread(target=Start_Recording)
+                thread.start()
+            elif button_state == True and recording:  # 버튼이 떼어지고 녹음 중이면 녹음 종료
+                recording = False
+                thread.join()  # 녹음 스레드가 종료될 때까지 기다립니다.
+                break
+
+    except KeyboardInterrupt:
+        GPIO.cleanup()  # 프로그램 종료 시 GPIO 설정 초기화
