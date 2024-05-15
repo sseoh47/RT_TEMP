@@ -2,7 +2,6 @@ import pyaudio
 import wave
 import threading
 import RPi.GPIO as GPIO
-from client import Bus_Finder
 
 
 CHUNK = 1024
@@ -57,7 +56,7 @@ def record():
     try:
         while True:
             button_state = GPIO.input(BUTTON_PIN)
-            
+
             ####
             if button_state == False and not recording:  # 버튼이 눌렸고 녹음 중이 아니면 녹음 시작
                 recording = True
