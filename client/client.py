@@ -4,12 +4,13 @@ import json
 import time
 from beacon import scan_for_beacons, found_beacon
 from button import*
+from constant import*
 
 class Client():
     def __init__(self):
         self.running = True
-        self.host = "172.20.10.4"  # 서버의 IP 주소
-        self.port = 8888  # 서버의 포트 번호
+        self.host = HOST  # 서버의 IP 주소
+        self.port = PORT  # 서버의 포트 번호
         # 소켓 생성 및 서버에 연결
         # [OS ERROR 10038] 소켓으로 인한 에러 해결 -> 연결 지속하기에 소켓 하나만 사용하기로
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -49,12 +50,16 @@ class Client():
                 response = self.sock.recv(1024).decode()  # 서버로부터 응답 수신
                 if response:
                     print(f"Received from server: {response}")  # 수신된 응답 출력
+                    self.check_bname(response)
                 else:
                     break  # 서버로부터의 연결이 끊어졌을 경우 while 문을 종료
         except Exception as e:
             print(f"Error receiving data from server: {e}")
 
-
+    def check_bname(self, response):
+        if response=="bname changed from N/A to BUS":
+            button=BUTTON()
+            button.record_dest()
 
     def start(self):
         # 클라이언트 시작 메소드

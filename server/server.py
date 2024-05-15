@@ -3,6 +3,7 @@ import threading
 import json
 import queue
 from linkedList import *
+from constant import*
 
 class Server:
     def __init__(self):
@@ -51,7 +52,7 @@ class Server:
 
     def start_server(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind(("172.20.10.4", 8888))
+        server_socket.bind((HOST, PORT))
         server_socket.listen()
         print("Server started. Waiting for client connections...")
 
