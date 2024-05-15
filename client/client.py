@@ -31,7 +31,8 @@ class Client():
                     "bname": found_beacon["name"],
                     "rssi": found_beacon["rssi"],
                     "dest": None,
-                    "busNum": -1
+                    "busNum": -1,
+                    "File":None
                 }
                 self.send_data_to_server(data)
             time.sleep(1)
@@ -59,11 +60,15 @@ class Client():
 
     def check_bname(self, response):
         if "bname changed from N/A to" in response:
-            print(found_beacon["name"])
+            #print(found_beacon["name"])
             text_to_speech(found_beacon["name"])
-
+            # 왜 사운드 재생이 안되지???
             button=BUTTON()
             button.record_dest()
+
+    def check_file(self, response):
+        if "file changed from None to" in response:
+            pass
 
     def start(self):
         # 클라이언트 시작 메소드
@@ -81,6 +86,8 @@ class Client():
                 scanner_thread.join(timeout=1)
                 response_thread.join(timeout=1)
         except KeyboardInterrupt:
+            # 아래코드 응용해 두번째 버튼 기능 이용가능할듯?!
+            # ctrlC일떄 아래 문구 출력, 소켓 닫고
             print("Program terminated")
             self.running = False
             self.sock.close()  # 프로그램 종료 시 소켓 닫기
