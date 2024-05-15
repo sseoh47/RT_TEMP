@@ -50,6 +50,7 @@ class Server:
                 self.data_queue.put((client_socket, data))
         self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
 
+
     def start_server(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.bind((HOST, PORT))

@@ -66,9 +66,10 @@ class Client():
             button=BUTTON()
             button.record_dest()
 
-    def check_file(self, response):
-        if "file changed from None to" in response:
-            pass
+
+
+
+
 
     def start(self):
         # 클라이언트 시작 메소드
