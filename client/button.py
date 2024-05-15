@@ -29,7 +29,7 @@ def Start_Recording():
     print('음성녹음 시작')
 
     while recording:  # recording이 True인 동안 계속 녹음
-        data = stream.read(CHUNK)
+        data = stream.read(CHUNK, exception_on_overflow = False)
         frames.append(data)
 
     print('음성녹음 완료')
