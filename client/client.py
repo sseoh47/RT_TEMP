@@ -58,6 +58,7 @@ class Client():
 
     def check_bname(self, response):
         if response=="bname changed from N/A to BUS":
+            print("*")
             button=BUTTON()
             button.record_dest()
 
