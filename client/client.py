@@ -57,7 +57,7 @@ class Client():
             print(f"Error receiving data from server: {e}")
 
     def check_bname(self, response):
-        if response=="bname changed from N/A to BUS":
+        if "bname changed from N/A to BUS" in response:
             print("*")
             button=BUTTON()
             button.record_dest()
