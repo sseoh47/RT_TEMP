@@ -5,6 +5,7 @@ import time
 from beacon import scan_for_beacons, found_beacon
 from button import*
 from constant import*
+from sound import*
 
 class Client():
     def __init__(self):
@@ -57,8 +58,9 @@ class Client():
             print(f"Error receiving data from server: {e}")
 
     def check_bname(self, response):
-        if "bname changed from N/A to BUS" in response:
-            print("*")
+        if "bname changed from N/A to" in response:
+            text_to_speech_pyaudio(found_beacon["name"])
+
             button=BUTTON()
             button.record_dest()
 
