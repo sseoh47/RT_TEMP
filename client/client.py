@@ -49,14 +49,14 @@ class Client():
                 response = self.sock.recv(1024).decode()  # 서버로부터 응답 수신
                 if response:
                     print(f"Received from server: {response}")  # 수신된 응답 출력
-                    self.check_bname()
+                    self.check_bname(response)
                 else:
                     break  # 서버로부터의 연결이 끊어졌을 경우 while 문을 종료
         except Exception as e:
             print(f"Error receiving data from server: {e}")
 
     def check_bname(self, response):
-        if response['bname'] == 'bus':
+        if response['bname'] == 'BUS':
             record()
 
 
