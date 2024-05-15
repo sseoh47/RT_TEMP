@@ -3,9 +3,7 @@ import threading
 import json
 import time
 from beacon import scan_for_beacons, found_beacon
-
-
-global_record=None
+from button import*
 
 class Client():
     def __init__(self):
@@ -31,12 +29,10 @@ class Client():
                     "bname": found_beacon["name"],
                     "rssi": found_beacon["rssi"],
                     "dest": None,
-                    "busNum": -1,
-                    "FILE": None
+                    "busNum": -1
                 }
                 self.send_data_to_server(data)
             time.sleep(1)
-  
 
     def beacon_scanner(self):
         try:
@@ -52,19 +48,16 @@ class Client():
             while self.running:
                 response = self.sock.recv(1024).decode()  # 서버로부터 응답 수신
                 if response:
-                    self.check_bname() ####
                     print(f"Received from server: {response}")  # 수신된 응답 출력
+                    self.check_bname()
                 else:
                     break  # 서버로부터의 연결이 끊어졌을 경우 while 문을 종료
         except Exception as e:
             print(f"Error receiving data from server: {e}")
 
-    #### 돌아가는지 모르겠네... response 받을때 N/A->BUS일텐데
     def check_bname(self, response):
-        print("*")
-        if response["bname"]=='bus':
+        if response['bname'] == 'bus':
             record()
-      
 
 
     def start(self):
