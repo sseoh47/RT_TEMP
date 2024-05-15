@@ -49,21 +49,12 @@ class Client():
                 response = self.sock.recv(1024).decode()  # 서버로부터 응답 수신
                 if response:
                     print(f"Received from server: {response}")  # 수신된 응답 출력
-                    self.check_bname(response)
                 else:
                     break  # 서버로부터의 연결이 끊어졌을 경우 while 문을 종료
         except Exception as e:
             print(f"Error receiving data from server: {e}")
 
-    def check_bname(self, response):
-        try:
-            data = json.loads(response)  # 문자열을 Python 사전으로 변환
-            if data['bname'] == 'BUS':
-                record()
-        except json.JSONDecodeError:
-            print("JSON 디코딩 실패: 응답이 JSON 형식이 아닙니다.")
-        except KeyError:
-            print("키 오류: 'bname' 키가 없습니다.")
+
 
     def start(self):
         # 클라이언트 시작 메소드
@@ -88,3 +79,4 @@ class Client():
 if __name__ == '__main__':
     client = Client()
     client.start()
+    record()
