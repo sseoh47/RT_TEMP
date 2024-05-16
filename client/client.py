@@ -32,7 +32,6 @@ class Client():
                     "rssi": found_beacon["rssi"],
                     "dest": None,
                     "busNum": -1,
-                    "File":None
                 }
                 self.send_data_to_server(data)
             time.sleep(1)
@@ -65,9 +64,6 @@ class Client():
             # 왜 사운드 재생이 안되지???
             button=BUTTON()
             button.record_dest()
-
-
-
 
 
 
