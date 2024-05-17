@@ -35,7 +35,15 @@ class Client():
                     "busNum": -1,
                 }
                 self.send_data_to_server(data)
-                self.send_file('./client/sample.wav')
+                
+                # 파일이 존재하는지 확인합니다.
+                if os.path.exists('./client/sample.wav'):
+                    # 파일이 존재하면 send_file 함수를 실행합니다.
+                    self.send_file('./client/sample.wav')
+                else:
+                # 파일이 존재하지 않으면 파일이 없다는 메시지를 출력합니다.
+                    pass
+                    
             time.sleep(1)
 
     def beacon_scanner(self):
