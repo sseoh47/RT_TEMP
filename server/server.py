@@ -25,50 +25,66 @@ class Server:
     # 데이터를 처리하는 함수
     def process_data(self):
         while True:
-            client_socket, data = self.data_queue.get()
-            changes = self.data_changed(data)
-            if changes:
-                change_message = "\n".join(changes)
-                print("Data changed:")
-                print(change_message)
-                client_socket.sendall(change_message.encode())
-            else:
-                print("No data change detected.")
-                client_socket.sendall("No data change detected.".encode())
-            print("-------------------------------------------\n")
+            try:
+                client_socket, data = self.data_queue.get()
+                changes = self.data_changed(data)
+                if changes:
+                    change_message = "\n".join(changes)
+                    print("Data changed:")
+                    print(change_message)
+                    client_socket.sendall(change_message.encode())
+                else:
+                    print("No data change detected.")
+                    client_socket.sendall("No data change detected.".encode())
+                print("-------------------------------------------\n")
+            except Exception as e:
+                print(f"Error processing data: {e}")
+                continue
 
-     # 클라이언트 핸들링 함수
+    # 클라이언트 핸들링 함수
     def handle_client(self, client_socket, addr):
         with client_socket:
+            print("*")
+            client_socket.settimeout(60)  # 타임아웃 설정 (60초)
             while True:
-                data = client_socket.recv(1024).decode()
-                if not data:
-                    break
-
-                if data == "done":
-                    print("File transfer completed.")
-                    client_socket.sendall("File transfer completed.".encode())
-                    continue
-                
                 try:
-                    data = json.loads(data)  # json 문자열을 Python 사전으로 변환
-                except json.JSONDecodeError:
-                    # 파일 데이터를 수신하는 경우
-                    file_data = data.encode()
-                    with open('server_received_file.wav', 'ab') as f:
-                        f.write(file_data)
-                    continue
-                
-                print(f"Received: {data}")
-                if data.get("type") == "file_transfer":
-                    file_name = data["file_name"]
-                    file_size = data["file_size"]
-                    print(f"Receiving file: {file_name}, size: {file_size} bytes")
-                    with open('server_received_file.wav', 'wb') as f:
-                        pass  # 파일 초기화 (기존 파일 내용 삭제)
-                else:
-                    # 데이터 큐에 추가
-                    self.data_queue.put((client_socket, data))
+                    print("**")
+                    data = client_socket.recv(1024).decode()
+                    if not data:
+                        break
+
+                    if data == "done":
+                        print("File transfer completed.")
+                        client_socket.sendall("File transfer completed.".encode())
+                        continue
+                    
+                    try:
+                        print("***")
+                        data = json.loads(data)  # json 문자열을 Python 사전으로 변환
+                    except json.JSONDecodeError:
+                        # 파일 데이터를 수신하는 경우
+                        file_data = data.encode()
+                        print("****")
+                        with open('server_received_file.wav', 'ab') as f:
+                            f.write(file_data)
+                        continue
+                    
+                    print(f"Received: {data}")
+                    if data.get("type") == "file_transfer":
+                        file_name = data["file_name"]
+                        file_size = data["file_size"]
+                        print(f"Receiving file: {file_name}, size: {file_size} bytes")
+                        with open('server_received_file.wav', 'wb') as f:
+                            pass  # 파일 초기화 (기존 파일 내용 삭제)
+                    else:
+                        # 데이터 큐에 추가
+                        self.data_queue.put((client_socket, data))
+                except socket.timeout:
+                    print(f"Connection with {addr} timed out.")
+                    break
+                except Exception as e: # 여기 에러 발생
+                    print(f"Error handling client {addr}: {e}")
+                    break
 
         self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
 
@@ -84,10 +100,13 @@ class Server:
         processing_thread.start()
 
         while True:
-            client_socket, addr = server_socket.accept()
-            self.clients.add(client_socket, addr)  # 새 클라이언트 추가
-            client_thread = threading.Thread(target=self.handle_client, args=(client_socket, addr))
-            client_thread.start()
+            try:
+                client_socket, addr = server_socket.accept()
+                self.clients.add(client_socket, addr)  # 새 클라이언트 추가
+                client_thread = threading.Thread(target=self.handle_client, args=(client_socket, addr))
+                client_thread.start()
+            except Exception as e:
+                print(f"Error accepting client connection: {e}")
 
 if __name__ == '__main__':
     server = Server()

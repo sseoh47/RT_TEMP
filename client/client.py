@@ -81,10 +81,12 @@ class Client:
                     self.sock.sendall(bytes_read)
 
             self.sock.sendall("done".encode())
+
             response = self.sock.recv(1024).decode()
             print(f"Server response: {response}")
             os.remove(file_path)
-            print(f"'{file_path}' has been successfully sent to the server and deleted.")
+            print(f"'{file_path}' has been successfully sent to the server and deleted.") # 클라이언트는 여기까지 확인
+            # 이후 Broken Pipe 발생
         except Exception as e:
             print(f"Could not send file to server: {e}")
 
