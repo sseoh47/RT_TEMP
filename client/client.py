@@ -77,28 +77,24 @@ class Client():
 
 
     def send_file(self, file_path):
-        print("****")
-        file_size = os.path.getsize(file_path)
-        self.send_data_to_server({"type": "file_transfer", "file_name": os.path.basename(file_path), "file_size": file_size})
+        try:
+            file_size = os.path.getsize(file_path)
+            self.sock.sendall(json.dumps({"type": "file_transfer", "file_name": os.path.basename(file_path), "file_size": file_size}).encode())
 
-        with open(file_path, 'rb') as file:
-            while True:
-                bytes_read = file.read(1024)
-                if not bytes_read:
-                    break  # 파일 전송 완료
-                self.sock.sendall(bytes_read)
-        
-        # 파일 전송 완료 신호 보내기
-        self.sock.sendall("done".encode())
-        
-        # 서버로부터의 응답 받기
-        response = self.sock.recv(1024).decode()
-        print(f"Server response: {response}")
-        
-        # 파일 전송이 완료된 후 파일 삭제
-        os.remove(file_path)
-        print(f"'{file_path}' has been successfully sent to the server and deleted.")
+            with open(file_path, 'rb') as file:
+                while True:
+                    bytes_read = file.read(1024)
+                    if not bytes_read:
+                        break
+                    self.sock.sendall(bytes_read)
 
+            self.sock.sendall("done".encode())
+            response = self.sock.recv(1024).decode()
+            print(f"Server response: {response}")
+            os.remove(file_path)
+            print(f"'{file_path}' has been successfully sent to the server and deleted.")
+        except Exception as e:
+            print(f"Could not send file to server: {e}")
 
     def start(self):
         # 클라이언트 시작 메소드
