@@ -97,7 +97,7 @@ class Server:
                     print(f"Error handling client {addr}: {e}")
                     break
 
-        #self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
+        self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
 
 
     def start_server(self):
