@@ -18,6 +18,7 @@ class Client():
         # [OS ERROR 10038] 소켓으로 인한 에러 해결 -> 연결 지속하기에 소켓 하나만 사용하기로
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
+        self.send = SEND(self)
 
     def send_data_to_server(self, data):
         try:
@@ -95,4 +96,3 @@ class Client():
 if __name__ == '__main__':
     client = Client()
     client.start()
-    send=SEND()
