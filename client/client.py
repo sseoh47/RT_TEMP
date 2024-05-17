@@ -6,8 +6,6 @@ from beacon import scan_for_beacons, found_beacon
 from button import*
 from constant import*
 from sound import*
-from sendData import*
-
 
 class Client():
     def __init__(self):
@@ -18,7 +16,7 @@ class Client():
         # [OS ERROR 10038] 소켓으로 인한 에러 해결 -> 연결 지속하기에 소켓 하나만 사용하기로
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
-        self.send = SEND(self)
+
 
     def send_data_to_server(self, data):
         try:
@@ -37,7 +35,7 @@ class Client():
                     "busNum": -1,
                 }
                 self.send_data_to_server(data)
-                self.send.send_file('./sample.wav')
+                self.send_file('./client/sample.wav')
             time.sleep(1)
 
     def beacon_scanner(self):
@@ -68,6 +66,29 @@ class Client():
             # 왜 사운드 재생이 안되지???
             button=BUTTON()
             button.record_dest()
+
+
+    def send_file(self, file_path):
+        file_size = os.path.getsize(file_path)
+        self.send_data_to_server({"type": "file_transfer", "file_name": os.path.basename(file_path), "file_size": file_size})
+
+        with open(file_path, 'rb') as file:
+            while True:
+                bytes_read = file.read(1024)
+                if not bytes_read:
+                    break  # 파일 전송 완료
+                self.sock.sendall(bytes_read)
+        
+        # 파일 전송 완료 신호 보내기
+        self.sock.sendall("done".encode())
+        
+        # 서버로부터의 응답 받기
+        response = self.sock.recv(1024).decode()
+        print(f"Server response: {response}")
+        
+        # 파일 전송이 완료된 후 파일 삭제
+        os.remove(file_path)
+        print(f"'{file_path}' has been successfully sent to the server and deleted.")
 
 
 
