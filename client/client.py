@@ -37,9 +37,9 @@ class Client():
                 self.send_data_to_server(data)
                 
                 # 파일이 존재하는지 확인합니다.
-                if os.path.exists('./client/sample.wav'):
+                if os.path.exists('./sample.wav'):
                     # 파일이 존재하면 send_file 함수를 실행합니다.
-                    self.send_file('./client/sample.wav')
+                    self.send_file('./sample.wav')
                 else:
                 # 파일이 존재하지 않으면 파일이 없다는 메시지를 출력합니다.
                     pass
@@ -97,7 +97,6 @@ class Client():
         # 파일 전송이 완료된 후 파일 삭제
         os.remove(file_path)
         print(f"'{file_path}' has been successfully sent to the server and deleted.")
-
 
 
     def start(self):
