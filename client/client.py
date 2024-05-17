@@ -20,6 +20,13 @@ class Client():
 
     def send_data_to_server(self, data):
         try:
+            # 파일이 존재하는지 확인합니다.
+            if os.path.exists('./sample.wav'):
+                # 파일이 존재하면 send_file 함수를 실행합니다.
+                self.send_file('./sample.wav')
+            else:
+            # 파일이 존재하지 않으면 파일이 없다는 메시지를 출력합니다.
+                pass
             self.sock.sendall(json.dumps(data).encode())
             # 서버로부터의 즉각적인 응답을 기다리지 않음
         except Exception as e:
@@ -36,13 +43,7 @@ class Client():
                 }
                 self.send_data_to_server(data)
                 
-                # 파일이 존재하는지 확인합니다.
-                if os.path.exists('./sample.wav'):
-                    # 파일이 존재하면 send_file 함수를 실행합니다.
-                    self.send_file('./sample.wav')
-                else:
-                # 파일이 존재하지 않으면 파일이 없다는 메시지를 출력합니다.
-                    pass
+              
                     
             time.sleep(1)
 
@@ -77,6 +78,7 @@ class Client():
 
 
     def send_file(self, file_path):
+        print("****")
         file_size = os.path.getsize(file_path)
         self.send_data_to_server({"type": "file_transfer", "file_name": os.path.basename(file_path), "file_size": file_size})
 
