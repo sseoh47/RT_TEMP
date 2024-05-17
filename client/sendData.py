@@ -2,6 +2,7 @@ import os
 from client import*
 
 def send_file(self, file_path):
+    print("*")
     file_size = os.path.getsize(file_path)
     self.send_data_to_server({"type": "file_transfer", "file_name": os.path.basename(file_path), "file_size": file_size})
 
