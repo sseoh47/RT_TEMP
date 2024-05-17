@@ -6,6 +6,8 @@ from beacon import scan_for_beacons, found_beacon
 from button import*
 from constant import*
 from sound import*
+from sendData import*
+
 
 class Client():
     def __init__(self):
@@ -34,6 +36,7 @@ class Client():
                     "busNum": -1,
                 }
                 self.send_data_to_server(data)
+                send_file('./client/sample.wav')
             time.sleep(1)
 
     def beacon_scanner(self):

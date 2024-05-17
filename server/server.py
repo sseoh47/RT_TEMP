@@ -37,17 +37,39 @@ class Server:
                 client_socket.sendall("No data change detected.".encode())
             print("-------------------------------------------\n")
 
-    # 클라이언트 핸들링 함수
+     # 클라이언트 핸들링 함수
     def handle_client(self, client_socket, addr):
         with client_socket:
             while True:
                 data = client_socket.recv(1024).decode()
                 if not data:
                     break
-                data = json.loads(data)  # json 문자열을 Python 사전으로 변환
+
+                if data == "done":
+                    print("File transfer completed.")
+                    client_socket.sendall("File transfer completed.".encode())
+                    continue
+                
+                try:
+                    data = json.loads(data)  # json 문자열을 Python 사전으로 변환
+                except json.JSONDecodeError:
+                    # 파일 데이터를 수신하는 경우
+                    file_data = data.encode()
+                    with open('server_received_file.wav', 'ab') as f:
+                        f.write(file_data)
+                    continue
+                
                 print(f"Received: {data}")
-                # 데이터 큐에 추가
-                self.data_queue.put((client_socket, data))
+                if data.get("type") == "file_transfer":
+                    file_name = data["file_name"]
+                    file_size = data["file_size"]
+                    print(f"Receiving file: {file_name}, size: {file_size} bytes")
+                    with open('server_received_file.wav', 'wb') as f:
+                        pass  # 파일 초기화 (기존 파일 내용 삭제)
+                else:
+                    # 데이터 큐에 추가
+                    self.data_queue.put((client_socket, data))
+
         self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
 
 
