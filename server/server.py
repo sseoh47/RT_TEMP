@@ -1,7 +1,7 @@
 import socket
 import threading
 import json
-import queue
+from queue import Queue
 from linkedList import *
 from constant import*
 
@@ -9,7 +9,7 @@ class Server:
     def __init__(self):
         self.clients = LinkedList()  # 클라이언트 관리를 위한 LinkedList 인스턴스 생성
         self.last_data = {}  # 가장 최근에 받은 데이터를 저장할 변수 (키별로)
-        self.data_queue = queue.Queue()  # 데이터 처리를 위한 큐
+        self.data_queue = Queue()  # 데이터 처리를 위한 큐
 
     # 데이터가 변경될 때 호출될 함수
     def data_changed(self, new_data):
@@ -41,52 +41,64 @@ class Server:
                 print(f"Error processing data: {e}")
                 continue
 
-    # 클라이언트 핸들링 함수
     def handle_client(self, client_socket, addr):
         with client_socket:
-            print("*")
             client_socket.settimeout(60)  # 타임아웃 설정 (60초)
+            receiving_file = False  # 파일 수신 상태 플래그
+            file_name = None
+            file_size = 0
+            received_size = 0
+
             while True:
                 try:
-                    print("**")
-                    data = client_socket.recv(1024).decode()
+                    data = client_socket.recv(1024)  # 데이터를 바이너리 형태로 받음
                     if not data:
                         break
 
-                    if data == "done":
-                        print("File transfer completed.")
-                        client_socket.sendall("File transfer completed.".encode())
+                    if receiving_file:
+                        # 파일 데이터 수신 상태에서는 바로 파일에 쓰기
+                        with open(file_name, 'ab') as f:
+                            f.write(data)
+                        received_size += len(data)
+                        if received_size >= file_size:
+                            # 파일 전송 완료
+                            print("File transfer completed.")
+                            receiving_file = False
+                            received_size = 0
                         continue
-                    
+
                     try:
-                        print("***")
-                        data = json.loads(data)  # json 문자열을 Python 사전으로 변환
+                        # 데이터를 UTF-8로 디코드하여 JSON으로 변환
+                        data_str = data.decode('utf-8')
+                        data = json.loads(data_str)
+                    except UnicodeDecodeError:
+                        continue  # 디코드 실패시 무시 (일반적인 경우 발생하지 않음)
                     except json.JSONDecodeError:
-                        # 파일 데이터를 수신하는 경우
-                        file_data = data.encode()
-                        print("****")
-                        with open('server_received_file.wav', 'ab') as f:
-                            f.write(file_data)
+                        print("JSON Decode Error: 데이터 형식이 올바르지 않습니다.")
                         continue
-                    
+
                     print(f"Received: {data}")
+
                     if data.get("type") == "file_transfer":
                         file_name = data["file_name"]
                         file_size = data["file_size"]
+                        receiving_file = True  # 파일 수신 상태로 전환
+                        received_size = 0  # 받은 파일 크기 초기화
                         print(f"Receiving file: {file_name}, size: {file_size} bytes")
-                        with open('server_received_file.wav', 'wb') as f:
+                        with open(file_name, 'wb') as f:
                             pass  # 파일 초기화 (기존 파일 내용 삭제)
                     else:
                         # 데이터 큐에 추가
                         self.data_queue.put((client_socket, data))
+
                 except socket.timeout:
                     print(f"Connection with {addr} timed out.")
                     break
-                except Exception as e: # 여기 에러 발생
+                except Exception as e:
                     print(f"Error handling client {addr}: {e}")
                     break
 
-        self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
+        #self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
 
 
     def start_server(self):
