@@ -54,7 +54,7 @@ class Server:
                     data = client_socket.recv(1024)  # 데이터를 바이너리 형태로 받음
                     if not data:
                         break
-
+                        
                     if receiving_file:
                         # 파일 데이터 수신 상태에서는 바로 파일에 쓰기
                         with open(file_name, 'ab') as f:
@@ -83,7 +83,6 @@ class Server:
                         file_name = data["file_name"]
                         file_size = data["file_size"]
                         receiving_file = True  # 파일 수신 상태로 전환
-                        received_size = 0  # 받은 파일 크기 초기화
                         print(f"Receiving file: {file_name}, size: {file_size} bytes")
                         with open(file_name, 'wb') as f:
                             pass  # 파일 초기화 (기존 파일 내용 삭제)
