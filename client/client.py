@@ -84,11 +84,12 @@ class Client:
 
             response = self.sock.recv(1024).decode()
             print(f"Server response: {response}")
-            os.remove(file_path)
-            print(f"'{file_path}' has been successfully sent to the server and deleted.") # 클라이언트는 여기까지 확인
-            # 이후 Broken Pipe
+            if response == "File transfer completed.":
+                os.remove(file_path)
+                print(f"'{file_path}' has been successfully sent to the server and deleted.")
         except Exception as e:
             print(f"Could not send file to server: {e}")
+
 
     def start(self):
         sender_thread = threading.Thread(target=self.data_sender)

@@ -1,7 +1,7 @@
 import socket
 import threading
 import json
-from queue import Queue
+import queue
 from linkedList import *
 from constant import*
 
@@ -9,7 +9,7 @@ class Server:
     def __init__(self):
         self.clients = LinkedList()  # 클라이언트 관리를 위한 LinkedList 인스턴스 생성
         self.last_data = {}  # 가장 최근에 받은 데이터를 저장할 변수 (키별로)
-        self.data_queue = Queue()  # 데이터 처리를 위한 큐
+        self.data_queue = queue.Queue()  # 데이터 처리를 위한 큐
 
     # 데이터가 변경될 때 호출될 함수
     def data_changed(self, new_data):
@@ -22,7 +22,7 @@ class Server:
         
         return changes
 
-    # 데이터를 처리하는 함수
+     # 데이터를 처리하는 함수
     def process_data(self):
         while True:
             try:
@@ -54,7 +54,7 @@ class Server:
                     data = client_socket.recv(1024)  # 데이터를 바이너리 형태로 받음
                     if not data:
                         break
-                        
+
                     if receiving_file:
                         # 파일 데이터 수신 상태에서는 바로 파일에 쓰기
                         with open(file_name, 'ab') as f:
@@ -83,6 +83,7 @@ class Server:
                         file_name = data["file_name"]
                         file_size = data["file_size"]
                         receiving_file = True  # 파일 수신 상태로 전환
+                        received_size = 0  # 받은 파일 크기 초기화
                         print(f"Receiving file: {file_name}, size: {file_size} bytes")
                         with open(file_name, 'wb') as f:
                             pass  # 파일 초기화 (기존 파일 내용 삭제)
@@ -98,6 +99,7 @@ class Server:
                     break
 
         self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
+
 
 
     def start_server(self):
