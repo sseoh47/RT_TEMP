@@ -18,7 +18,7 @@ class Client():
         # [OS ERROR 10038] 소켓으로 인한 에러 해결 -> 연결 지속하기에 소켓 하나만 사용하기로
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
-        self.send = SEND(self)
+        self.send = SEND()
 
     def send_data_to_server(self, data):
         try:
@@ -37,7 +37,7 @@ class Client():
                     "busNum": -1,
                 }
                 self.send_data_to_server(data)
-                send.send_file('./sample.wav')
+                self.send.send_file('./sample.wav')
             time.sleep(1)
 
     def beacon_scanner(self):
