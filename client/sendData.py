@@ -1,4 +1,5 @@
 import os
+from client import*
 
 def send_file(self, file_path):
     file_size = os.path.getsize(file_path)

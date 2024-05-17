@@ -36,7 +36,7 @@ class Client():
                     "busNum": -1,
                 }
                 self.send_data_to_server(data)
-                send_file('./client/sample.wav')
+                self.send_file('./client/sample.wav')
             time.sleep(1)
 
     def beacon_scanner(self):
