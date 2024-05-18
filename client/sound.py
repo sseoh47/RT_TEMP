@@ -26,6 +26,7 @@ class SOUND:
         # 절대 경로 확인
         abs_path = os.path.abspath(wav_path)
         if os.path.exists(abs_path):
+            print("*")
             playsound(abs_path)
         else:
             print(f"파일을 찾을 수 없습니다: {abs_path}")
