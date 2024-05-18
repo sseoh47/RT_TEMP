@@ -16,6 +16,7 @@ class SOUND:
             # pygame.init()
             time.sleep(1)
             playsound(filename)
+            print("*")
             # pygame.mixer.music.load(filename)
             # pygame.mixer.music.play()
             # self.play_wav_file(filename)
