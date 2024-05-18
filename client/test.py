@@ -9,10 +9,14 @@ def text_to_speech():
             pygame.init()
             time.sleep(1)
             print("*")
-            pygame.mixer.music.load(filename)
-            pygame.mixer.music.play()
-            while pygame.mixer.music.get_busy():
-                pygame.time.Clock().tick(10)
+
+            mySound=pygame.mixer.Sound(filename)
+            mySound.play()
+            mySound.stop()
+            # pygame.mixer.music.load(filename)
+            # pygame.mixer.music.play()
+            # while pygame.mixer.music.get_busy():
+            #     pygame.time.Clock().tick(10)
             # os.remove(filename)  # 재생 후 오디오 파일 삭제
         except Exception as e:
             print(f"Error in text_to_speech: {e}")
