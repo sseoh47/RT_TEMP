@@ -11,6 +11,7 @@ def text_to_speech():
 
             pygame.mixer.music.load('./sample.wav')
             pygame.mixer.music.play()
+            print("*")
             # pygame.mixer.music.load(filename)
             # pygame.mixer.music.play()
             # while pygame.mixer.music.get_busy():
