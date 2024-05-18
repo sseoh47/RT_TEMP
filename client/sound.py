@@ -6,7 +6,7 @@ class SOUND:
     def __init__(self):
         print("start sound")
 
-    def text_to_speech(text, lang='en'):
+    def text_to_speech(self, text, lang='en'):
         try:
             tts = gTTS(text=text, lang=lang, slow=False)  # 텍스트를 TTS 객체로 변환
             filename = "station.wav"  # 임시 오디오 파일 이름
