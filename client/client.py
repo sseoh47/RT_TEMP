@@ -60,7 +60,8 @@ class Client():
     def check_bname(self, response):
         if "bname changed from N/A to" in response:
             #print(found_beacon["name"])
-            text_to_speech(found_beacon["name"])
+            sound=SOUND()
+            sound.text_to_speech(found_beacon["name"])
             # 왜 사운드 재생이 안되지???
             button=BUTTON()
             button.record_dest()
