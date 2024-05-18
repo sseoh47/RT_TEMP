@@ -2,7 +2,7 @@ from gtts import gTTS
 import pygame
 import os
 import time
-import playsound
+from playsound import playsound
 
 class SOUND:
     def __init__(self):
@@ -17,13 +17,15 @@ class SOUND:
             # time.sleep(1)
             # pygame.mixer.music.load(filename)
             # pygame.mixer.music.play()
-            playsound.playsound(filename, block=True)
+            self.play_wav_file(filename)
             #os.remove(filename)  # 재생 후 오디오 파일 삭제
         except Exception as e:
             print(f"Error in text_to_speech_pyaudio: {e}")
 
-# from playsound import playsound
-
-# def starts():
-#     filename = "station.wav"  # 임시 오디오 파일 이름
-#     playsound(filename)  # 저장된 오디오 파일 재생
+    def play_wav_file(self, wav_path):
+        # 절대 경로 확인
+        abs_path = os.path.abspath(wav_path)
+        if os.path.exists(abs_path):
+            playsound(abs_path)
+        else:
+            print(f"파일을 찾을 수 없습니다: {abs_path}")
