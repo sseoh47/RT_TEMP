@@ -79,17 +79,18 @@ class Client():
         # 클라이언트 시작 메소드
         sender_thread = threading.Thread(target=self.data_sender)
         scanner_thread = threading.Thread(target=self.beacon_scanner)
-        response_thread = threading.Thread(target=self.listen_for_responses)
+        #response_thread = threading.Thread(target=self.listen_for_responses)
 
         sender_thread.start()
         scanner_thread.start()
-        response_thread.start()
+        #response_thread.start()
+        self.listen_for_responses()
 
         try:
-            while sender_thread.is_alive() or scanner_thread.is_alive() or response_thread.is_alive():
+            while sender_thread.is_alive() or scanner_thread.is_alive():# or response_thread.is_alive():
                 sender_thread.join(timeout=1)
                 scanner_thread.join(timeout=1)
-                response_thread.join(timeout=1)
+                #response_thread.join(timeout=1)
         except KeyboardInterrupt:
             # 아래코드 응용해 두번째 버튼 기능 이용가능할듯?!
             # ctrlC일떄 아래 문구 출력, 소켓 닫고
