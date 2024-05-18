@@ -1,3 +1,4 @@
 import playsound
 
-playsound.playsound("station.wav")
+def sound():
+    playsound.playsound("station.wav")
