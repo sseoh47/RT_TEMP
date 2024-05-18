@@ -22,84 +22,33 @@ class Server:
         
         return changes
 
-     # 데이터를 처리하는 함수
+    # 데이터를 처리하는 함수
     def process_data(self):
         while True:
-            try:
-                client_socket, data = self.data_queue.get()
-                changes = self.data_changed(data)
-                if changes:
-                    change_message = "\n".join(changes)
-                    print("Data changed:")
-                    print(change_message)
-                    client_socket.sendall(change_message.encode())
-                else:
-                    print("No data change detected.")
-                    client_socket.sendall("No data change detected.".encode())
-                print("-------------------------------------------\n")
-            except Exception as e:
-                print(f"Error processing data: {e}")
-                continue
+            client_socket, data = self.data_queue.get()
+            changes = self.data_changed(data)
+            if changes:
+                change_message = "\n".join(changes)
+                print("Data changed:")
+                print(change_message)
+                client_socket.sendall(change_message.encode())
+            else:
+                print("No data change detected.")
+                client_socket.sendall("No data change detected.".encode())
+            print("-------------------------------------------\n")
 
+    # 클라이언트 핸들링 함수
     def handle_client(self, client_socket, addr):
         with client_socket:
-            client_socket.settimeout(60)  # 타임아웃 설정 (60초)
-            receiving_file = False  # 파일 수신 상태 플래그
-            file_name = None
-            file_size = 0
-            received_size = 0
-
             while True:
-                try:
-                    data = client_socket.recv(1024)  # 데이터를 바이너리 형태로 받음
-                    if not data:
-                        break
-
-                    if receiving_file:
-                        # 파일 데이터 수신 상태에서는 바로 파일에 쓰기
-                        with open(file_name, 'ab') as f:
-                            f.write(data)
-                        received_size += len(data)
-                        if received_size >= file_size:
-                            # 파일 전송 완료
-                            print("File transfer completed.")
-                            receiving_file = False
-                            received_size = 0
-                        continue
-
-                    try:
-                        # 데이터를 UTF-8로 디코드하여 JSON으로 변환
-                        data_str = data.decode('utf-8')
-                        data = json.loads(data_str)
-                    except UnicodeDecodeError:
-                        continue  # 디코드 실패시 무시 (일반적인 경우 발생하지 않음)
-                    except json.JSONDecodeError:
-                        print("JSON Decode Error: 데이터 형식이 올바르지 않습니다.")
-                        continue
-
-                    print(f"Received: {data}")
-
-                    if data.get("type") == "file_transfer":
-                        file_name = data["file_name"]
-                        file_size = data["file_size"]
-                        receiving_file = True  # 파일 수신 상태로 전환
-                        received_size = 0  # 받은 파일 크기 초기화
-                        print(f"Receiving file: {file_name}, size: {file_size} bytes")
-                        with open(file_name, 'wb') as f:
-                            pass  # 파일 초기화 (기존 파일 내용 삭제)
-                    else:
-                        # 데이터 큐에 추가
-                        self.data_queue.put((client_socket, data))
-
-                except socket.timeout:
-                    print(f"Connection with {addr} timed out.")
+                data = client_socket.recv(1024).decode()
+                if not data:
                     break
-                except Exception as e:
-                    print(f"Error handling client {addr}: {e}")
-                    break
-
+                data = json.loads(data)  # json 문자열을 Python 사전으로 변환
+                print(f"Received: {data}")
+                # 데이터 큐에 추가
+                self.data_queue.put((client_socket, data))
         self.clients.remove(client_socket)  # 클라이언트 연결 종료 시 LinkedList에서 제거
-
 
 
     def start_server(self):
@@ -113,13 +62,10 @@ class Server:
         processing_thread.start()
 
         while True:
-            try:
-                client_socket, addr = server_socket.accept()
-                self.clients.add(client_socket, addr)  # 새 클라이언트 추가
-                client_thread = threading.Thread(target=self.handle_client, args=(client_socket, addr))
-                client_thread.start()
-            except Exception as e:
-                print(f"Error accepting client connection: {e}")
+            client_socket, addr = server_socket.accept()
+            self.clients.add(client_socket, addr)  # 새 클라이언트 추가
+            client_thread = threading.Thread(target=self.handle_client, args=(client_socket, addr))
+            client_thread.start()
 
 if __name__ == '__main__':
     server = Server()
