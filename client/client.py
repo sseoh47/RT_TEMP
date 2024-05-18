@@ -14,8 +14,8 @@ class Client():
         self.port = PORT  # 서버의 포트 번호
         # 소켓 생성 및 서버에 연결
         # [OS ERROR 10038] 소켓으로 인한 에러 해결 -> 연결 지속하기에 소켓 하나만 사용하기로
-        #self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #self.sock.connect((self.host, self.port))
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((self.host, self.port))
 
     def send_data_to_server(self, data):
         try:
@@ -52,9 +52,6 @@ class Client():
             self.running = False
 
     def listen_for_responses(self):
-        self.check_bname()
-
-        """
         try:
             self.sock.settimeout(None)  # 소켓의 타임아웃을 None으로 설정하여 무한 대기
             while self.running:
@@ -66,13 +63,8 @@ class Client():
                     break  # 서버로부터의 연결이 끊어졌을 경우 while 문을 종료
         except Exception as e:
             print(f"Error receiving data from server: {e}")
-        """
 
-    def check_bname(self, response="Test"):
-        sound=SOUND()
-        sound.text_to_speech(found_beacon["name"],'en')
-
-        """
+    def check_bname(self, response):
         if "bname changed from N/A to" in response:
             #print(found_beacon["name"])
             sound=SOUND()
@@ -80,34 +72,30 @@ class Client():
             # 왜 사운드 재생이 안되지???
             button=BUTTON()
             button.record_dest()
-        """
 
 
 
     def start(self):
         # 클라이언트 시작 메소드
-        #sender_thread = threading.Thread(target=self.data_sender)
-        #scanner_thread = threading.Thread(target=self.beacon_scanner)
-        #response_thread = threading.Thread(target=self.listen_for_responses)
+        sender_thread = threading.Thread(target=self.data_sender)
+        scanner_thread = threading.Thread(target=self.beacon_scanner)
+        response_thread = threading.Thread(target=self.listen_for_responses)
 
-        #sender_thread.start()
-        #scanner_thread.start()
-        #response_thread.start()
-        self.listen_for_responses()
+        sender_thread.start()
+        scanner_thread.start()
+        response_thread.start()
 
-        """
         try:
-            while sender_thread.is_alive() or scanner_thread.is_alive():# or response_thread.is_alive():
+            while sender_thread.is_alive() or scanner_thread.is_alive() or response_thread.is_alive():
                 sender_thread.join(timeout=1)
                 scanner_thread.join(timeout=1)
-                #response_thread.join(timeout=1)
+                response_thread.join(timeout=1)
         except KeyboardInterrupt:
             # 아래코드 응용해 두번째 버튼 기능 이용가능할듯?!
             # ctrlC일떄 아래 문구 출력, 소켓 닫고
             print("Program terminated")
             self.running = False
             self.sock.close()  # 프로그램 종료 시 소켓 닫기
-        """
 
 if __name__ == '__main__':
     client = Client()
