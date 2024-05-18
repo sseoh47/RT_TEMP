@@ -8,11 +8,9 @@ def text_to_speech():
             # tts.save(filename)  # 오디오 파일로 저장
             pygame.init()
             time.sleep(1)
-            print("*")
 
-            mySound=pygame.mixer.Sound(filename)
-            mySound.play()
-            mySound.stop()
+            pygame.mixer.music.load('./sample.wav')
+            pygame.mixer.music.play()
             # pygame.mixer.music.load(filename)
             # pygame.mixer.music.play()
             # while pygame.mixer.music.get_busy():
