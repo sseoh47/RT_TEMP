@@ -23,6 +23,13 @@ class Client():
             # 서버로부터의 즉각적인 응답을 기다리지 않음
         except Exception as e:
             print(f"Could not send data to server: {e}")
+            
+    # def restart_button(self):
+    #     if(button2==press):
+    #         found_beacon["name"]=Restart
+    #     else:
+    #         found_beacon["name"]
+    #     pass
 
     def data_sender(self):
         while self.running:
