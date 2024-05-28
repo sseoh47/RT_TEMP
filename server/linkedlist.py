@@ -38,3 +38,5 @@ class LinkedList:
             sockets.append(current.client_socket)
             current = current.next
         return sockets
+
+

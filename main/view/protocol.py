@@ -21,6 +21,7 @@ class CustomProtocol:
                          'body': e}
         finally:
             return dict_data
+        
     
 
     # dict_data {"root": :"root", "body":"body"}
@@ -36,3 +37,5 @@ class CustomProtocol:
 
         finally:
             return string_data
+
+        # dict_data = "PATH 840"

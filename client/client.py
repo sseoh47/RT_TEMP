@@ -22,13 +22,6 @@ class Client():
         except Exception as e:
             print(f"Could not send data to server: {e}")
             
-    # def restart_button(self):
-    #     if(button2==press):
-    #         found_beacon["name"]=Restart
-    #     else:
-    #         found_beacon["name"]
-    #     pass
-
     def data_sender(self):
         while self.running:
             if found_beacon["name"] is not None:

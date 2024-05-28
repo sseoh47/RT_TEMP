@@ -2,6 +2,7 @@ from socket import socket, AF_INET, SOCK_STREAM
 from threading import Thread
 from view.tcp_socket import StreamTCPSocket
 from controller.logic import Logic
+import time
 
 
 HOST = '127.0.0.1'
@@ -40,11 +41,13 @@ class ASGI:
 
     def recv_thread(self, streamTCPSocket:StreamTCPSocket, logic:Logic):
         while True:
+            time.sleep(0.2)
             dict_data = streamTCPSocket.receive()
             logic.recv_enque(dict_data=dict_data)
 
     def send_thread(self, streamTCPSocket:StreamTCPSocket, logic:Logic):
         while True:
+            time.sleep(0.2)
             result = logic.isEmptySendQueue()
             if not result:
                 dict_data = logic.send_deque()
