@@ -78,6 +78,7 @@ class HardwareCtrlClass:
     def set_vib_distance(self, distance):
         self.__distance = distance
 
+    # vibration flag setting
     def set_vib_flag(self, state):
         self.__vib_flag[0] = state
     
