@@ -18,14 +18,17 @@ class EmbeddedLogic:
         self.__harward_ctrl = HardwareCtrlClass
         self.__target_location = ""
         
-    def is_send_queue_empty(self)->bool:
+    # send queue가 비어있는지 확인-> YES(1)/NO(0)로 응답(bool)
+    def is_send_queue_empty(self)->bool:  # bool로 반환
         result=self.__send_queue.empty()
         return result
 
-    def __is_recv_queue_empty(self)->bool:
+    # recv queue가 비어있는지 확인-> YES(1)/NO(0)로 응답(bool)
+    def __is_recv_queue_empty(self)->bool:  # bool로 반환
         result=self.__recv_queue.empty()
         return result
 
+    # recv thread's enque
     def recv_enque(self, dict_data:dict):
         print(dict_data)
         self.__recv_queue.put(dict_data)
@@ -34,6 +37,7 @@ class EmbeddedLogic:
         print(dict_data)
         self.__send_queue.put(dict_data)
 
+    # recv thread's deque
     def send_deque(self)->dict:
         dict_data = self.__send_queue.get()
         print(dict_data)
@@ -44,51 +48,57 @@ class EmbeddedLogic:
         print(dict_data)
         return dict_data
     
+    # 받아온 데이터를 스피커로 말할 문장 생성 함수
     def __make_sentence(self, data):
-                # 버스를 찾지 못했을 때
+        # 버스를 찾지 못했을 때
         if data == "None":
             return {"result": f"{self.__target_location}로 갈 수 있는 버스는 없습니다. 죄송합니다."}
         
-        # 버스 찾았을 때 Dict 형태로 반환 데이터 준비
+        # 버스 찾았을 때 :: Dict 형태로 반환 데이터 준비
         sentence_data = f"{self.__target_location}으로 가기 위해 {data}"
         sentence_data = sentence_data + "번 버스를 타야 합니다. 감사합니다."
-        return sentence_data
+        return sentence_data  # 문장 생성 후 반환
 
-    
+    # thread
     def embedded_logic_thread(self):
-        target_bname = "None"
+        target_bname = "None"  # 찾아야 하는 비콘 이름 (default: None)
         
         while True:
+            # 어떤 버튼이 눌렸는지 지속적으로 확인해야 함
             dict_button_data = self.__harward_ctrl.what_button_is_it()
 
+            # 과정 1. 가고자 하는 목적지 입력 및 경로 찾아 알림
             if self.__now_state == "PATH":
                 result = self.__is_recv_queue_empty()
-                if result:
-                    data = self.__recv_deque()
-                    if data['root'] == "PATH":
-                        sentence_data = self.__make_sentence(data['body'])
-                        filename=self.__text_to_wav(data=sentence_data)
-                        self.__harward_ctrl.speaker_start(filename)
-                        self.__now_state = "BUS"
+                if result:  # 들어있다면
+                    data = self.__recv_deque()  # recv thread에 담겨있는 data 추출
+                    if data['root'] == "PATH":  # data: ['root': destination, 'body': bus_number]
+                        sentence_data = self.__make_sentence(data['body'])  # 입력받은 데이터로 사용자에게 알릴 문장 생성
+                        filename=self.__text_to_wav(data=sentence_data)  # convert : txt > wav file
+                        self.__harward_ctrl.speaker_start(filename)  # speak
+                        self.__now_state = "BUS"  # 과정 2로 바꿔주기
 
+            # 과정 2. 목적지까지 가는(== 내가 타야 할))버스 위치 파악
             if self.__now_state == "BUS":
                 bname = self.__beacon_network.get_bus_beacon()
-                if target_bname != "None":
-                    rssi = self.__beacon_network.get_rssi()
-                    self.__harward_ctrl.set_vib_distance(rssi)
-
+                
+                if target_bname != "None":  # 즉, 비콘을 찾았다면
+                    rssi = self.__beacon_network.get_rssi()  # RSSI 값 받기
+                    self.__harward_ctrl.set_vib_distance(rssi)  # RSSI 거리에 따른 진동
 
                 send_data = {"root" : "BUS", "body": bname}
                 self.__send_enque(send_data)
 
                 result = self.__is_recv_queue_empty()
-                if not result:
-                    recv_data = self.__recv_deque()
+                if not result:  # 들어있다면
+                    recv_data = self.__recv_deque()  # 뽑아내기
+                    
                     if recv_data['body'] == bname:
                         target_bname = bname
                         self.__harward_ctrl.set_vib_flag[True]
                         # 이제 이 비콘만 찾으면 됨
 
+            # button 1 function :: speak destination (== system input)
             if not dict_button_data['mic_button'][0]:
                 self.__now_state = 'PATH'
                 result = self.__harward_ctrl.mic_func_start()
@@ -103,32 +113,35 @@ class EmbeddedLogic:
                     "target" : self.__target_location}
                 self.__send_enque(result_data)
             
+            # button 2 function :: end system
             elif dict_button_data['end_button'][0]:
                 self.__now_state == "END"
                 self.__harward_ctrl.set_vib_flag(False)
 
-            elif dict_button_data['end_button'][0] and self.__now_state != "BUS":
-                bname = self.__beacon_network.get_beacon()               
+            # button 3 function ??
+            elif dict_button_data['end_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
+                bname = self.__beacon_network.get_beacon()
                 target_txt = "이 버스는 영남대 건너 정류장 입니다."
                 filename = self.__text_to_wav(target_txt)
                 self.__harward_ctrl.speaker_start(filename=filename)
             
-            elif dict_button_data['end_button'][0] and self.__now_state == "BUS":
+            elif dict_button_data['end_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
                 target_txt = f"이 버스는 {bname}번 버스입니다"
                 filename = self.__text_to_wav(target_txt)
                 self.__harward_ctrl.speaker_start(filename=filename)
 
-
+    # convert :: text > wav file
     def __text_to_wav(self, data):
         tts = gTTS(text=data, lang='ko', slow=False)  # 텍스트를 TTS 객체로 변환
         filename = "./temp/audio.wav"  # 임시 오디오 파일 이름
         tts.save(filename)  # 오디오 파일로 저장
         return filename
     
+    # convert :: wav file > text
     def __wav_to_text(self):
-        file_name = f"./temp/sample.wav"
+        file_name = f"./temp/sample.wav"  # 바꿀 wav file
         wr = Wav_Recognizer()
-        location = wr.recognizing_file(file_name)
+        location = wr.recognizing_file(file_name)  # wav file 분석
         return location
 
     # 이거 어케 하더라

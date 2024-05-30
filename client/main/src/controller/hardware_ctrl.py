@@ -6,6 +6,7 @@ import pygame
 import time
 import numpy as np
 
+# 진동 울리는 거리값
 DIST_THRESHOLD = 4500
 WARN_THRESHOLD = 2500
 DANG_THRESHOLD = 1200
