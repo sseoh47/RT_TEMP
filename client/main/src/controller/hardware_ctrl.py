@@ -17,7 +17,13 @@ VIB_CYCLE = 2
 
 MIC_BUTTON= 2
 END_BUTTON = 3
-SPEAK_BUTTON= 5
+SPEAK_BUTTON= 4
+
+LED_RED =17
+LED_GREEN = 27
+LED_YELLOW = 22
+
+
 
 class 마이크임:
     def __init__(self) -> None:
@@ -69,13 +75,50 @@ class HardwareCtrlClass:
         self.__mic_button = [True]
         self.__end_button = [True]
         self.__speak_button = [True]
-        self.__mic = 마이크임()
-        self.__vib = Vibrater()
+        #self.__mic = 마이크임()
+        #self.__vib = Vibrater()
         self.__distance = [DIST_THRESHOLD]
         self.__vib_flag = [False]
-        thread = Thread(target = self.__vib.give_vib_feedback,
-                        args=(self.__distance, self.__vib_flag))
+        #thread = Thread(target = self.__vib.give_vib_feedback,
+                        #args=(self.__distance, self.__vib_flag))
+        #thread.start()
         self.__make_button()
+        button_thread = Thread(target=self.__button_thread)
+        button_thread.start()
+
+        led_test_thread = Thread(target=self.__led_test_thread)
+        led_test_thread.start()
+
+
+    # 이거 어케 하더라
+    def __button_thread(self):
+        button_list = []
+        while True:
+            button_list = [GPIO.input(MIC_BUTTON), 
+                           GPIO.input(END_BUTTON),
+                           GPIO.input(SPEAK_BUTTON)]
+            self.button_pressed(button_list)
+
+    def __led_test_thread(self):
+        GPIO.setup(LED_RED, GPIO.OUT)
+        GPIO.setup(LED_GREEN, GPIO.OUT)
+        GPIO.setup(LED_YELLOW, GPIO.OUT)
+        while True:
+            if self.__mic_button[0]:
+                GPIO.output(LED_RED, True)
+            else:
+                GPIO.output(LED_RED, False)
+
+            if self.__end_button[0]:
+                GPIO.output(LED_YELLOW, True)
+            else:
+                GPIO.output(LED_YELLOW, False)
+
+            if self.__speak_button[0]:
+                GPIO.output(LED_GREEN, True)
+            else:
+                GPIO.output(LED_GREEN, False)
+
 
     def set_vib_distance(self, distance):
         self.__distance = distance
@@ -168,11 +211,14 @@ import time
 
 if __name__ == "__main__":
     #vib = Vibrater()
-    bn = BeaconNetwork()
-    thread = Thread(target=bn.find_beacon_thread,)
-    while True:
-        time.sleep(0.5)
-        print(bn.get_beacon_data())
+    #bn = BeaconNetwork()
+    ##thread = Thread(target=bn.find_beacon_thread,)
+    #while True:
+        #time.sleep(0.5)
+        #print(bn.get_beacon_data())
+
+    hc = HardwareCtrlClass()
+
 
 
 
