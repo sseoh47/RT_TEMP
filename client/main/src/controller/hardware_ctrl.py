@@ -30,7 +30,7 @@ class MIC_Class:
         self.CHUNK = 1024
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
-        self.RATE = 44100
+        self.RATE = 12000
         self.WAVE_OUTPUT_FILENAME = r'./temp/sample.wav'
         self.frames = []
 
