@@ -162,7 +162,7 @@ class Vibrater:
         return True
     
 
-from controller.beacon_network import BeaconNetwork
+from beacon_network import BeaconNetwork
 import time
 
 if __name__ == "__main__":
