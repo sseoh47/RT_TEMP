@@ -29,11 +29,10 @@ class BUTTON:
         print('음성녹음 시작')
         while self.recording:  # recording이 True인 동안 계속 녹음
             data = stream.read(self.CHUNK, exception_on_overflow = False) #overflow 해결위해 추가
-            print(data)
             frames.append(data)
 
         print('음성녹음 완료')
-
+        print(len(frames))
         stream.stop_stream()
         stream.close()
         p.terminate()

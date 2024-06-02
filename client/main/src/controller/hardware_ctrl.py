@@ -55,6 +55,7 @@ class MIC_Class:
                 frames.append(data)
 
             print('음성녹음 완료')
+            print(len(frames))
 
             stream.stop_stream()
             stream.close()
