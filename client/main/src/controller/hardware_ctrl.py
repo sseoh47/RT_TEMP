@@ -15,7 +15,9 @@ STOP_THRESHOLD = 500
 VIB_PIN = 17
 VIB_CYCLE = 2
 
-BUTTON_PIN = 2
+MIC_BUTTON= 2
+END_BUTTON = 3
+SPEAK_BUTTON= 5
 
 class 마이크임:
     def __init__(self) -> None:
@@ -77,17 +79,25 @@ class HardwareCtrlClass:
 
     def set_vib_distance(self, distance):
         self.__distance = distance
+        return
 
     # vibration flag setting
     def set_vib_flag(self, state):
         self.__vib_flag[0] = state
+        return
     
-    def button_pressed(self, button):
-        self.__mic_button[0] = button
+    def button_pressed(self, button:list):
+        self.__end_button[0] = button[0]
+        self.__speak_button[0] = button[1]
+        self.__mic_button[0] = button[2]
+        return
 
     def __make_button(self):
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(MIC_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(SPEAK_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(END_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        return
 
     def speaker_start(self, filename):
         pygame.init()
@@ -150,3 +160,20 @@ class Vibrater:
             return False
         # 거리가 임계거리보다 작다면 True를 반환
         return True
+    
+
+from controller.beacon_network import BeaconNetwork
+import time
+
+if __name__ == "__main__":
+    #vib = Vibrater()
+    bn = BeaconNetwork()
+    bn.find_beacon_thread()
+    while True:
+        time.sleep(0.5)
+        print(bn.get_beacon_data())
+
+
+
+
+    

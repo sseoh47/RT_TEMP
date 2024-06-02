@@ -19,6 +19,9 @@ class BeaconNetwork:
         thread.start()
         return
     
+    def get_beacon_data(self):
+        return self.__beacon_data
+    
     def get_beacon(self):
         return self.__beacon_name
     

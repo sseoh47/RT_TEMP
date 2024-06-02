@@ -1,6 +1,6 @@
 from queue import Queue
 from controller.beacon_network import BeaconNetwork
-from controller.hardware_ctrl import HardwareCtrlClass
+from controller.hardware_ctrl import HardwareCtrlClass, MIC_BUTTON, END_BUTTON, SPEAK_BUTTON
 from threading import Thread
 import RPi.GPIO as GPIO
 
@@ -8,6 +8,8 @@ from gtts import gTTS
 import speech_recognition as sr
 import re  # String 분석용도 
 import time
+
+
 
 class EmbeddedLogic:
     def __init__(self) -> None:
@@ -119,13 +121,13 @@ class EmbeddedLogic:
                 self.__harward_ctrl.set_vib_flag(False)
 
             # button 3 function ??
-            elif dict_button_data['end_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
+            elif dict_button_data['speak_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
                 bname = self.__beacon_network.get_beacon()
                 target_txt = "이 버스는 영남대 건너 정류장 입니다."
                 filename = self.__text_to_wav(target_txt)
                 self.__harward_ctrl.speaker_start(filename=filename)
             
-            elif dict_button_data['end_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
+            elif dict_button_data['speak_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
                 target_txt = f"이 버스는 {bname}번 버스입니다"
                 filename = self.__text_to_wav(target_txt)
                 self.__harward_ctrl.speaker_start(filename=filename)
@@ -146,9 +148,12 @@ class EmbeddedLogic:
 
     # 이거 어케 하더라
     def button_thread(self):
+        button_list = []
         while True:
-            button_state = GPIO.input(2)
-            self.__harward_ctrl.button_pressed(button_state)
+            button_list = [GPIO.input(MIC_BUTTON), 
+                           GPIO.input(END_BUTTON),
+                           GPIO.input(SPEAK_BUTTON)]
+            self.__harward_ctrl.button_pressed(button_list)
     
 
 # WAV 파일 분석기
