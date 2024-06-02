@@ -22,9 +22,17 @@ class EmbeddedLogic:
         self.__beacon_network = BeaconNetwork()
         self.__harward_ctrl = HardwareCtrlClass()
         self.__target_location = ""
-        thread = Thread(target=self.embedded_logic_thread)
+        thread = Thread(target=self.start_logic)
         thread.start()
 
+    def start_logic(self):
+        print("logic 시작")
+        while True:
+            thread = Thread(target=self.embedded_logic_thread)
+            thread.start()
+            thread.join()
+            print("logic 종료됨")
+            print("logic 재시작 됨")
 
         
     # send queue가 비어있는지 확인-> YES(1)/NO(0)로 응답(bool)
@@ -71,11 +79,14 @@ class EmbeddedLogic:
     # thread
     def embedded_logic_thread(self):
         target_bname = "None"  # 찾아야 하는 비콘 이름 (default: None)
-        
+        data = {
+            'root' : "None",
+            'body' : "default"
+        }
         while True:
             # 어떤 버튼이 눌렸는지 지속적으로 확인해야 함
             dict_button_data = self.__harward_ctrl.what_button_is_it()
-            print(dict_button_data)
+            #print(dict_button_data)
             result =None
 
             # 과정 1. 가고자 하는 목적지 입력 및 경로 찾아 알림
@@ -83,6 +94,7 @@ class EmbeddedLogic:
                 result = self.__is_recv_queue_empty()
                 if result:  # 들어있다면
                     data = self.__recv_deque()  # recv thread에 담겨있는 data 추출
+                    print(data)
                     if data['root'] == "PATH":  # data: ['root': destination, 'body': bus_number]
                         sentence_data = self.__make_sentence(data['body'])  # 입력받은 데이터로 사용자에게 알릴 문장 생성
                         filename=self.__text_to_wav(data=sentence_data)  # convert : txt > wav file
@@ -130,6 +142,7 @@ class EmbeddedLogic:
             elif dict_button_data['end_button'][0]:
                 self.__now_state == "END"
                 self.__harward_ctrl.set_vib_flag(False)
+                break
 
             # button 3 function ??
             elif dict_button_data['speak_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
@@ -140,7 +153,7 @@ class EmbeddedLogic:
                 #self.__harward_ctrl.speaker_start(filename=filename)
             
             elif dict_button_data['speak_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
-                bname = self.__beacon_network.get_beacon()
+                bname = self.__beacon_network.get_bus_beacon()
                 target_txt = f"이 버스는 {bname}번 버스입니다"
                 filename = self.__text_to_wav(target_txt)
                 time.sleep(1)
@@ -183,8 +196,24 @@ class EmbeddedLogic:
         else:
             print("Error : " + response.text)
         dict_data = json.loads(response.text)
+        text_data = dict_data['text']
+
+        self.__extract_location(text_data)
+
         return dict_data['text']
 
+    def __extract_location(self, sentence:str):
+        sentence = sentence.replace(" ", "")
+
+        # "으로" 또는 "에"가 포함된 부분을 추출
+        match = re.search(r'(.+?)(으로|에)', sentence)
+        
+        if match:
+            result = match.group(1).strip()
+            print("target : ", result)
+            return result
+        else:
+            return None
 
 
     # 이거 어케 하더라
