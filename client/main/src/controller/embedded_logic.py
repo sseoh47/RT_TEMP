@@ -19,6 +19,8 @@ class EmbeddedLogic:
         self.__beacon_network = BeaconNetwork()
         self.__harward_ctrl = HardwareCtrlClass()
         self.__target_location = ""
+        thread = Thread(target=self.embedded_logic_thread)
+        thread.start()
 
 
         
