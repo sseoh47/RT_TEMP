@@ -50,6 +50,7 @@ class MIC_Class:
 
             while not button_state[0]:  # recording이 True인 동안 계속 녹음
                 data = stream.read(self.CHUNK, exception_on_overflow = False) #overflow 해결위해 추가
+                print(data)
                 frames.append(data)
 
             print('음성녹음 완료')
