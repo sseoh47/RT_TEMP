@@ -3,7 +3,7 @@ class CustomProtocol:
         pass
 
     # root body
-    def string_to_dict(self, dataL:str):
+    def string_to_dict(self, data:str):
         data=data.split()
         dict_data={"root":"","body":"body"}
         dict_data["root"]=data[0]
