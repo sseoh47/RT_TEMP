@@ -114,7 +114,7 @@ class EmbeddedLogic:
             if not dict_button_data['mic_button'][0]:
                 self.__now_state = 'PATH'
                 result = self.__harward_ctrl.mic_func_start()
-                time.sleep(1)
+                time.sleep(3)
                 if not result:
                     continue
                 self.__target_location = self.__wav_to_text()
@@ -182,8 +182,8 @@ class EmbeddedLogic:
             print (response.text)
         else:
             print("Error : " + response.text)
-
-        return response.text['text']
+        dict_data = json.loads(response.text)
+        return dict_data['text']
 
 
 
