@@ -105,19 +105,19 @@ class HardwareCtrlClass:
         GPIO.setup(LED_YELLOW, GPIO.OUT)
         while True:
             if self.__mic_button[0]:
-                GPIO.output(LED_RED, True)
-            else:
                 GPIO.output(LED_RED, False)
+            else:
+                GPIO.output(LED_RED, True)
 
             if self.__end_button[0]:
-                GPIO.output(LED_YELLOW, True)
-            else:
                 GPIO.output(LED_YELLOW, False)
+            else:
+                GPIO.output(LED_YELLOW, True)
 
             if self.__speak_button[0]:
-                GPIO.output(LED_GREEN, True)
-            else:
                 GPIO.output(LED_GREEN, False)
+            else:
+                GPIO.output(LED_GREEN, True)
 
 
     def set_vib_distance(self, distance):
