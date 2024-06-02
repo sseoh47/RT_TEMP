@@ -64,8 +64,9 @@ class MIC_Class:
             wf.setframerate(self.RATE)
             wf.writeframes(b''.join(frames))
             wf.close()
-        except :
+        except Exception as e:
             print("음성이 녹음 되다맘")
+            print("오류명 : ", e)
             return False
         return True
 
