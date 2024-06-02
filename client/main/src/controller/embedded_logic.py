@@ -121,7 +121,7 @@ class EmbeddedLogic:
                     
                     if recv_data['body'] == bname:
                         target_bname = bname
-                        self.__harward_ctrl.set_vib_flag[True]
+                        self.__harward_ctrl.set_vib_flag(True)
                         # 이제 이 비콘만 찾으면 됨
 
             # button 1 function :: speak destination (== system input)
