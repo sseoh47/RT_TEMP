@@ -120,6 +120,7 @@ class EmbeddedLogic:
                     "root" : "PATH",
                     "bname" : bname,
                     "target" : self.__target_location}
+                print(result_data)
                 self.__send_enque(result_data)
             
             # button 2 function :: end system

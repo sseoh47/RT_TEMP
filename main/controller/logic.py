@@ -38,6 +38,7 @@ class Logic:
             result = self.__isEmptyRecvQueue()
             if not result:
                 dict_data = self.__recv_deque()
+                print(dict_data)
                 if dict_data['root'] == 'PATH':
                     pathFindLogic = PathFindLogic()
                     result = pathFindLogic.get_shortest_path(dict_data['bname'], dict_data['body'])
