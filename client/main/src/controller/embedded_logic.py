@@ -8,7 +8,7 @@ import requests
 
 
 from gtts import gTTS
-import speech_recognition as sr
+#import speech_recognition as sr
 import re  # String 분석용도 
 import time
 
@@ -187,7 +187,6 @@ class EmbeddedLogic:
 
 
 
-
     # 이거 어케 하더라
     def button_thread(self):
         button_list = []
@@ -197,7 +196,7 @@ class EmbeddedLogic:
                            GPIO.input(SPEAK_BUTTON)]
             self.__harward_ctrl.button_pressed(button_list)
     
-
+"""
 # WAV 파일 분석기
 class Wav_Recognizer:
     def __init__(self):
@@ -226,5 +225,6 @@ class Wav_Recognizer:
             return result
         else:
             return None
+"""
 
 
