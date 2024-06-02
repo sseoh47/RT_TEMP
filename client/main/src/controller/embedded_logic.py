@@ -33,6 +33,7 @@ class EmbeddedLogic:
             thread.join()
             print("logic 종료됨")
             print("logic 재시작 됨")
+            print("now _state : ", self.__now_state)
             time.sleep(1)
 
         
@@ -113,7 +114,7 @@ class EmbeddedLogic:
                     self.__harward_ctrl.set_vib_distance(rssi)  # RSSI 거리에 따른 진동
 
                 send_data = {"root" : "BUS", "body": bname}
-                print("send data : ", send_data)
+                #print("send data : ", send_data)
                 self.__send_enque(send_data)
 
                 result = self.__is_recv_queue_empty()
@@ -162,6 +163,7 @@ class EmbeddedLogic:
                 time.sleep(1)
                 print(target_txt)
                 #self.__harward_ctrl.speaker_start(filename=filename)
+        return
 
     # convert :: text > wav file
     def __text_to_wav(self, data):

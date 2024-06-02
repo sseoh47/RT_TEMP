@@ -135,8 +135,8 @@ class HardwareCtrlClass:
     
     def button_pressed(self, button:list):
         self.__mic_button[0] = button[0]
-        self.__speak_button[0] = button[1]
-        self.__end_button[0] = button[2]
+        self.__end_button[0] = button[1]
+        self.__speak_button[0] = button[2]
         return
 
     def __make_button(self):
