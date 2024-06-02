@@ -161,7 +161,7 @@ class HardwareCtrlClass:
         return dict_button_data
 
     def mic_func_start(self):
-        result = self.__mic.mic_record_on(self.__mic_button[0])
+        result = self.__mic.mic_record_on(self.__mic_button)
         return result
 
 
