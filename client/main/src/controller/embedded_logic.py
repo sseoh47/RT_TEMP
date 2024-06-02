@@ -16,9 +16,11 @@ class EmbeddedLogic:
         self.__recv_queue=Queue()
         self.__send_queue=Queue()
         self.__now_state = "default"  # PATH or BUS or default
-        self.__beacon_network = BeaconNetwork
-        self.__harward_ctrl = HardwareCtrlClass
+        self.__beacon_network = BeaconNetwork()
+        self.__harward_ctrl = HardwareCtrlClass()
         self.__target_location = ""
+
+
         
     # send queue가 비어있는지 확인-> YES(1)/NO(0)로 응답(bool)
     def is_send_queue_empty(self)->bool:  # bool로 반환
