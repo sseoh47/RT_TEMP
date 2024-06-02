@@ -3,6 +3,9 @@ from controller.beacon_network import BeaconNetwork
 from controller.hardware_ctrl import HardwareCtrlClass, MIC_BUTTON, END_BUTTON, SPEAK_BUTTON
 from threading import Thread
 import RPi.GPIO as GPIO
+import json
+import requests
+
 
 from gtts import gTTS
 import speech_recognition as sr
@@ -152,11 +155,38 @@ class EmbeddedLogic:
         return filename
     
     # convert :: wav file > text
+    #def __wav_to_text(self):
+        #file_name = f"./temp/sample.wav"  # 바꿀 wav file
+        #wr = Wav_Recognizer()
+        #location = wr.recognizing_file(file_name)  # wav file 분석
+        #return location
+    
     def __wav_to_text(self):
-        file_name = f"./temp/sample.wav"  # 바꿀 wav file
-        wr = Wav_Recognizer()
-        location = wr.recognizing_file(file_name)  # wav file 분석
-        return location
+        data = open("./temp/sample.wav", "rb") # STT를 진행하고자 하는 음성 파일
+
+        Lang = "Kor" # Kor / Jpn / Chn / Eng
+        #URL = "https://naveropenapi.apigw.ntruss.com/recog/v0/stt?lang=" + Lang
+        URL = "https://clovaspeech-gw.ncloud.com/recog/v1/stt?lang=" + Lang
+
+        ID = "alsrhks2508" # 인증 정보의 Client ID
+        Secret = "21bdbb764e5d4f3da460a9c37dbf58af" # 인증 정보의 Client Secret
+            
+        headers = {
+            "Content-Type": "application/octet-stream", # Fix
+            "X-CLOVASPEECH-API-KEY" : Secret
+        }
+        response = requests.post(URL,  data=data, headers=headers)
+        rescode = response.status_code
+
+        if(rescode == 200):
+            print (response.text)
+        else:
+            print("Error : " + response.text)
+
+        return response.text['text']
+
+
+
 
     # 이거 어케 하더라
     def button_thread(self):
