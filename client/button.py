@@ -66,3 +66,13 @@ class BUTTON:
         except KeyboardInterrupt:
             GPIO.cleanup()  # 프로그램 종료 시 GPIO 설정 초기화
 
+
+import time
+if __name__ =="__main__":
+    b = BUTTON()
+    thread = threading.Thread(target=b.record_dest)
+    thread.start()
+    time.sleep(3)
+    b.Start_Recording()
+
+
