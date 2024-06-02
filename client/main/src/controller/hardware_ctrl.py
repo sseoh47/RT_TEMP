@@ -27,7 +27,7 @@ LED_YELLOW = 22
 
 class MIC_Class:
     def __init__(self) -> None:
-        self.CHUNK = 1024
+        self.CHUNK = 258
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
         self.RATE = 44100
