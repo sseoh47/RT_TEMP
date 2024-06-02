@@ -109,7 +109,7 @@ class EmbeddedLogic:
                 
                 if target_bname != "None":  # 즉, 비콘을 찾았다면
                     rssi = self.__beacon_network.get_rssi()  # RSSI 값 받기
-                    self.__harward_ctrl.set_vib_distance([rssi])  # RSSI 거리에 따른 진동
+                    self.__harward_ctrl.set_vib_distance(rssi)  # RSSI 거리에 따른 진동
 
                 send_data = {"root" : "BUS", "body": bname}
                 print("send data : ", send_data)
