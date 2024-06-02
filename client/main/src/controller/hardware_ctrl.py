@@ -169,10 +169,9 @@ class HardwareCtrlClass:
 
 
 class Vibrater:
-    def __init__(self, info):
+    def __init__(self):
         #GPIO.setmode(GPIO.BCM)
         GPIO.setup(VIB_PIN, GPIO.OUT)
-        self.info = info
         # 진동 사이클
         self.cycle = VIB_CYCLE #초
     
