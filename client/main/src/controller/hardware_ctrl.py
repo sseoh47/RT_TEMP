@@ -185,7 +185,7 @@ class Vibrater:
             #distance=self.__find_min_dist(distances=distances)
                 print("now_dist : ", distances)
                 print("cycle : ", self.cycle)
-                if(self.__check_distance(distances[0])):
+                if(self.__check_distance(abs(distances[0]))):
                     now_time=time.time()
                     if(now_time-end_time>self.cycle):
                         GPIO.output(VIB_PIN,True)
