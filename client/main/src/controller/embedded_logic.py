@@ -86,6 +86,7 @@ class EmbeddedLogic:
         while True:
             # 어떤 버튼이 눌렸는지 지속적으로 확인해야 함
             dict_button_data = self.__harward_ctrl.what_button_is_it()
+            time.sleep(0.5)
             #print(dict_button_data)
             result =None
 
