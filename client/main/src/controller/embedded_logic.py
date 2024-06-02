@@ -70,6 +70,7 @@ class EmbeddedLogic:
         while True:
             # 어떤 버튼이 눌렸는지 지속적으로 확인해야 함
             dict_button_data = self.__harward_ctrl.what_button_is_it()
+            print(dict_button_data)
             result =None
 
             # 과정 1. 가고자 하는 목적지 입력 및 경로 찾아 알림
