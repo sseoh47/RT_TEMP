@@ -139,20 +139,20 @@ class EmbeddedLogic:
                 self.__send_enque(result_data)
             
             # button 2 function :: end system
-            elif dict_button_data['end_button'][0]:
+            elif not dict_button_data['end_button'][0]:
                 self.__now_state == "END"
                 self.__harward_ctrl.set_vib_flag(False)
                 break
 
             # button 3 function ??
-            elif dict_button_data['speak_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
+            elif not dict_button_data['speak_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
                 target_txt = "이 버스는 영남대 건너 정류장 입니다."
                 filename = self.__text_to_wav(target_txt)
                 time.sleep(1)
                 print(target_txt)
                 #self.__harward_ctrl.speaker_start(filename=filename)
             
-            elif dict_button_data['speak_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
+            elif not dict_button_data['speak_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
                 bname = self.__beacon_network.get_bus_beacon()
                 target_txt = f"이 버스는 {bname}번 버스입니다"
                 filename = self.__text_to_wav(target_txt)
