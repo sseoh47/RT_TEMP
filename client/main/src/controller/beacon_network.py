@@ -47,12 +47,12 @@ class ScanDelegate(DefaultDelegate):
             for (adtype, desc, value) in dev.getScanData():
                 if value == STATION:
                     # STATION 비콘 발견
-                    print("STATION Beacon found")
+                    #print("STATION Beacon found")
                     self.beacon_list[0]['bname'] = value
                     self.beacon_list[0]['rssi'] = dev.rssi
                 elif value == BUS:
                     # BUS 비콘 발견
-                    print("BUS Beacon found")
+                    #print("BUS Beacon found")
                     self.beacon_list[1]['bname'] = value
                     self.beacon_list[1]['rssi'] = dev.rssi
 

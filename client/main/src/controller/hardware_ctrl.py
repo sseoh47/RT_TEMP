@@ -163,12 +163,13 @@ class Vibrater:
     
 
 from beacon_network import BeaconNetwork
+from threading import Thread
 import time
 
 if __name__ == "__main__":
     #vib = Vibrater()
     bn = BeaconNetwork()
-    bn.find_beacon_thread()
+    thread = Thread(target=bn.find_beacon_thread,)
     while True:
         time.sleep(0.5)
         print(bn.get_beacon_data())
