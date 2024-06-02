@@ -68,6 +68,7 @@ class EmbeddedLogic:
         while True:
             # 어떤 버튼이 눌렸는지 지속적으로 확인해야 함
             dict_button_data = self.__harward_ctrl.what_button_is_it()
+            result =None
 
             # 과정 1. 가고자 하는 목적지 입력 및 경로 찾아 알림
             if self.__now_state == "PATH":
@@ -77,7 +78,8 @@ class EmbeddedLogic:
                     if data['root'] == "PATH":  # data: ['root': destination, 'body': bus_number]
                         sentence_data = self.__make_sentence(data['body'])  # 입력받은 데이터로 사용자에게 알릴 문장 생성
                         filename=self.__text_to_wav(data=sentence_data)  # convert : txt > wav file
-                        self.__harward_ctrl.speaker_start(filename)  # speak
+                        #self.__harward_ctrl.speaker_start(filename)  # speak
+                        print(sentence_data)
                         self.__now_state = "BUS"  # 과정 2로 바꿔주기
 
             # 과정 2. 목적지까지 가는(== 내가 타야 할))버스 위치 파악
@@ -122,15 +124,17 @@ class EmbeddedLogic:
 
             # button 3 function ??
             elif dict_button_data['speak_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
-                bname = self.__beacon_network.get_beacon()
                 target_txt = "이 버스는 영남대 건너 정류장 입니다."
                 filename = self.__text_to_wav(target_txt)
-                self.__harward_ctrl.speaker_start(filename=filename)
+                print(target_txt)
+                #self.__harward_ctrl.speaker_start(filename=filename)
             
             elif dict_button_data['speak_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
+                bname = self.__beacon_network.get_beacon()
                 target_txt = f"이 버스는 {bname}번 버스입니다"
                 filename = self.__text_to_wav(target_txt)
-                self.__harward_ctrl.speaker_start(filename=filename)
+                print(target_txt)
+                #self.__harward_ctrl.speaker_start(filename=filename)
 
     # convert :: text > wav file
     def __text_to_wav(self, data):

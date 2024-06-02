@@ -25,7 +25,7 @@ LED_YELLOW = 22
 
 
 
-class 마이크임:
+class MIC_Class:
     def __init__(self) -> None:
         self.CHUNK = 1024
         self.FORMAT = pyaudio.paInt16
@@ -75,7 +75,7 @@ class HardwareCtrlClass:
         self.__mic_button = [True]
         self.__end_button = [True]
         self.__speak_button = [True]
-        #self.__mic = 마이크임()
+        self.__mic = MIC_Class()
         #self.__vib = Vibrater()
         self.__distance = [DIST_THRESHOLD]
         self.__vib_flag = [False]
@@ -103,6 +103,7 @@ class HardwareCtrlClass:
         GPIO.setup(LED_RED, GPIO.OUT)
         GPIO.setup(LED_GREEN, GPIO.OUT)
         GPIO.setup(LED_YELLOW, GPIO.OUT)
+
         while True:
             if self.__mic_button[0]:
                 GPIO.output(LED_RED, False)
@@ -205,19 +206,19 @@ class Vibrater:
         return True
     
 
-from beacon_network import BeaconNetwork
-from threading import Thread
-import time
+#from beacon_network import BeaconNetwork
+#from threading import Thread
+#import time
 
-if __name__ == "__main__":
-    #vib = Vibrater()
-    #bn = BeaconNetwork()
-    ##thread = Thread(target=bn.find_beacon_thread,)
-    #while True:
-        #time.sleep(0.5)
-        #print(bn.get_beacon_data())
+#if __name__ == "__main__":
+    ##vib = Vibrater()
+    ##bn = BeaconNetwork()
+    ###thread = Thread(target=bn.find_beacon_thread,)
+    ##while True:
+        ##time.sleep(0.5)
+        ##print(bn.get_beacon_data())
 
-    hc = HardwareCtrlClass()
+    #hc = HardwareCtrlClass()
 
 
 
