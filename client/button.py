@@ -27,10 +27,11 @@ class BUTTON:
                         frames_per_buffer=self.CHUNK)
 
         print('음성녹음 시작')
-
+        time.sleep(1)
         while self.recording:  # recording이 True인 동안 계속 녹음
             data = stream.read(self.CHUNK, exception_on_overflow = False) #overflow 해결위해 추가
             frames.append(data)
+        time.sleep(1)
 
         print('음성녹음 완료')
 
