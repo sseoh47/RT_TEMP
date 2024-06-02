@@ -12,7 +12,7 @@ WARN_THRESHOLD = 2500
 DANG_THRESHOLD = 1200
 STOP_THRESHOLD = 500
 
-VIB_PIN = 17
+VIB_PIN = 16
 VIB_CYCLE = 2
 
 MIC_BUTTON= 2
@@ -79,12 +79,12 @@ class HardwareCtrlClass:
         self.__end_button = [True]
         self.__speak_button = [True]
         self.__mic = MIC_Class()
-        #self.__vib = Vibrater()
+        self.__vib = Vibrater()
         self.__distance = [DIST_THRESHOLD]
         self.__vib_flag = [False]
-        #thread = Thread(target = self.__vib.give_vib_feedback,
-                        #args=(self.__distance, self.__vib_flag))
-        #thread.start()
+        thread = Thread(target = self.__vib.give_vib_feedback,
+                        args=(self.__distance, self.__vib_flag))
+        thread.start()
         self.__make_button()
         button_thread = Thread(target=self.__button_thread)
         button_thread.start()
@@ -125,7 +125,7 @@ class HardwareCtrlClass:
 
 
     def set_vib_distance(self, distance):
-        self.__distance = distance
+        self.__distance[0] = distance
         return
 
     # vibration flag setting
