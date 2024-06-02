@@ -183,6 +183,8 @@ class Vibrater:
                 time.sleep(1)
             else:
             #distance=self.__find_min_dist(distances=distances)
+                print("now_dist : ", distances)
+                print("cycle : ", self.cycle)
                 if(self.__check_distance(distances[0])):
                     now_time=time.time()
                     if(now_time-end_time>self.cycle):
