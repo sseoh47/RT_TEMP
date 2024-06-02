@@ -36,41 +36,42 @@ class MIC_Class:
         self.frames = []
 
     def mic_record_on(self, button_state):
-        try:
-            frames = []
+        global frames
+        #try:
+        frames = []
 
-            p = pyaudio.PyAudio()
+        p = pyaudio.PyAudio()
 
-            stream = p.open(format=self.FORMAT,
-                            channels=self.CHANNELS,
-                            rate=self.RATE,
-                            input=True,
-                            frames_per_buffer=self.CHUNK)
+        stream = p.open(format=self.FORMAT,
+                        channels=self.CHANNELS,
+                        rate=self.RATE,
+                        input=True,
+                        frames_per_buffer=self.CHUNK)
 
-            print('음성녹음 시작')
+        print('음성녹음 시작')
 
-            while not button_state[0]:  # recording이 True인 동안 계속 녹음
-                data = stream.read(self.CHUNK, exception_on_overflow = False) #overflow 해결위해 추가
-                print(data)
-                frames.append(data)
+        while not button_state[0]:  # recording이 True인 동안 계속 녹음
+            data = stream.read(self.CHUNK, exception_on_overflow = False) #overflow 해결위해 추가
+            print(data)
+            frames.append(data)
 
-            print('음성녹음 완료')
-            print(len(frames))
+        print('음성녹음 완료')
+        print(len(frames))
 
-            stream.stop_stream()
-            stream.close()
-            p.terminate()
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
 
-            wf = wave.open(self.WAVE_OUTPUT_FILENAME, 'wb')
-            wf.setnchannels(self.CHANNELS)
-            wf.setsampwidth(p.get_sample_size(self.FORMAT))
-            wf.setframerate(self.RATE)
-            wf.writeframes(b''.join(frames))
-            wf.close()
-        except Exception as e:
-            print("음성이 녹음 되다맘")
-            print("오류명 : ", e)
-            return False
+        wf = wave.open(self.WAVE_OUTPUT_FILENAME, 'wb')
+        wf.setnchannels(self.CHANNELS)
+        wf.setsampwidth(p.get_sample_size(self.FORMAT))
+        wf.setframerate(self.RATE)
+        wf.writeframes(b''.join(frames))
+        wf.close()
+        #except Exception as e:
+            #print("음성이 녹음 되다맘")
+            #print("오류명 : ", e)
+            #return False
         return True
 
 
