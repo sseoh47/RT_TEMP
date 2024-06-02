@@ -95,7 +95,7 @@ class EmbeddedLogic:
                 result = self.__is_recv_queue_empty()
                 if result:  # 들어있다면
                     data = self.__recv_deque()  # recv thread에 담겨있는 data 추출
-                    print(data)
+                    #print(data)
                     if data['root'] == "PATH":  # data: ['root': destination, 'body': bus_number]
                         sentence_data = self.__make_sentence(data['body'])  # 입력받은 데이터로 사용자에게 알릴 문장 생성
                         filename=self.__text_to_wav(data=sentence_data)  # convert : txt > wav file

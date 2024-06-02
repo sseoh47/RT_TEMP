@@ -23,13 +23,16 @@ class BeaconNetwork:
         return self.__beacon_data
     
     def get_beacon(self):
-        return self.__beacon_name
+        #return self.__beacon_name
+        return self.__beacon_data[0]["bname"]
     
     def get_rssi(self):
-        return self.__beacon_rssi
+        #return self.__beacon_rssi
+        return self.__beacon_data[1]["rssi"]
     
     def get_bus_beacon(self):
-        return self.__bus_beacon_name
+        #return self.__bus_beacon_name
+        return self.__beacon_data[1]["bname"]
 
     def find_beacon_thread(self):
         while True:

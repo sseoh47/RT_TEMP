@@ -8,7 +8,7 @@ class StreamTCPSocket:
 
     def recv(self)->bytes:
         recv_data:bytes = self.__socket.recv(1024)
-        print(recv_data)
+        #print(recv_data)
         return recv_data
     
     def send(self, string_data:str):
