@@ -198,9 +198,9 @@ class EmbeddedLogic:
         dict_data = json.loads(response.text)
         text_data = dict_data['text']
 
-        self.__extract_location(text_data)
+        result = self.__extract_location(text_data)
 
-        return dict_data['text']
+        return result
 
     def __extract_location(self, sentence:str):
         sentence = sentence.replace(" ", "")
