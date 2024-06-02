@@ -7,8 +7,7 @@ class Logic:
     def __init__(self) -> None:
         self.__send_queue=Queue()
         self.__recv_queue=Queue()
-        thread=Thread(target= self.__controller_interface_thread,
-                    args=None)
+        thread=Thread(target= self.__controller_interface_thread,)
         thread.start()
         thread.join()
        
