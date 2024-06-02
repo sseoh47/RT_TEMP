@@ -3,8 +3,8 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import requests
 
-# TMAP_APPKEY = "wuLynpCfphaaJZkwoId0w4AWaJb9mbht1IVtIX0K"  # __ 혜림
-TMAP_APPKEY = "P56mSqdnljg7fNjmu2BD5I1DEutBPcVazegTouZ8" # __ 서희
+TMAP_APPKEY = "wuLynpCfphaaJZkwoId0w4AWaJb9mbht1IVtIX0K"  # __ 혜림
+# TMAP_APPKEY = "P56mSqdnljg7fNjmu2BD5I1DEutBPcVazegTouZ8" # __ 서희
 
 class Master_Model:
     def __init__(self):
