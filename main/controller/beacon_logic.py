@@ -33,8 +33,10 @@ class Beacon_Model:
     
     def find_bus_with_bname(self, bname:str):
         result = "None"
+        print(bname)
         for bus in self.__bus:
-            if bus['bname'] == bname:
+            if bus['name'] == bname:
+                
                 result = bus['name']
                 break
 

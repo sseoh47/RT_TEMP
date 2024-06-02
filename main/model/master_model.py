@@ -3,8 +3,8 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import requests
 
-TMAP_APPKEY = "wuLynpCfphaaJZkwoId0w4AWaJb9mbht1IVtIX0K"  # __ 혜림
-# TMAP_APPKEY = "P56mSqdnljg7fNjmu2BD5I1DEutBPcVazegTouZ8"  __ 서희
+# TMAP_APPKEY = "wuLynpCfphaaJZkwoId0w4AWaJb9mbht1IVtIX0K"  # __ 혜림
+TMAP_APPKEY = "P56mSqdnljg7fNjmu2BD5I1DEutBPcVazegTouZ8" # __ 서희
 
 class Master_Model:
     def __init__(self):
@@ -14,7 +14,7 @@ class Master_Model:
     # XML 파일 읽기
     def __get_station(self):
         # XML PARSING
-        tree = ET.parse('./data_set/station_data.xml')
+        tree = ET.parse('./model/data_set/station_data.xml')
         root = tree.getroot()
 
         # XML 데이터 파싱하여 Pandas DataFrame으로 변환

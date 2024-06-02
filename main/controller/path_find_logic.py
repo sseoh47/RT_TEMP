@@ -34,9 +34,11 @@ class PathFindLogic:
             return {"result": f"{target}로 갈수 있는 버스는 없습니다. 죄송합니다."}
         
         # 버스 찾았을 때 Dict 형태로 반환 데이터 준비
-        return_data = f"{target}으로 가기 위해 {bus}"
-        return_data = return_data + "번 버스를 타야합니다. 감사합니다."
-            
+        # return_data = f"{target}으로 가기 위해 {bus}"
+        # return_data = return_data + "번 버스를 타야합니다. 감사합니다."
+        bus=bus.split(":")[1]
+        return_data=f"{bus}"
+
         result = {'root' : 'PATH', "body":return_data}
         return result 
 

@@ -9,7 +9,6 @@ class Logic:
         self.__recv_queue=Queue()
         thread=Thread(target= self.__controller_interface_thread,)
         thread.start()
-        thread.join()
        
     def recv_enque(self, dict_data:dict):
         self.__recv_queue.put(dict_data)
@@ -35,15 +34,17 @@ class Logic:
         return
     
     def __controller_interface_thread(self):
-        result = self.__isEmptyRecvQueue()
-        if not result:
-            dict_data = self.__recv_deque()
-            if dict_data['root'] == 'PATH':
-                pathFindLogic = PathFindLogic()
-                result = pathFindLogic.get_shortest_path(dict_data['bname'], dict_data['body'])
-                self.__send_enque(dict_data=result)
-            elif dict_data['root'] == 'BUS':
-                beaconLogic = BeaconLogic()
-                result = beaconLogic.find_beacon_info(dict_data['bname'])
-                self.__send_enque(dict_data=result)
+        while True:
+            result = self.__isEmptyRecvQueue()
+            if not result:
+                dict_data = self.__recv_deque()
+                if dict_data['root'] == 'PATH':
+                    pathFindLogic = PathFindLogic()
+                    result = pathFindLogic.get_shortest_path(dict_data['bname'], dict_data['body'])
+                    self.__send_enque(dict_data=result)
+                elif dict_data['root'] == 'BUS':
+                    print(dict_data['root'])
+                    beaconLogic = BeaconLogic()
+                    result = beaconLogic.find_beacon_info(dict_data['bname'])
+                    self.__send_enque(dict_data=result)
 

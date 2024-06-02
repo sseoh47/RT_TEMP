@@ -22,10 +22,12 @@ class ASGI:
             streamTCPSocket = StreamTCPSocket(client_socket=client_socket, addr=addr)
             thread = Thread(target=self.__client_handle_thread,
                             args=(streamTCPSocket,))
+            print("connected, and thread start")
             thread.start()
 
     
     def __client_handle_thread(self, streamTCPSocket):
+        print("client handle thread started")
         logic = Logic()
 
         recv_thread = Thread(target=self.recv_thread,
@@ -40,12 +42,14 @@ class ASGI:
         send_thread.join()
 
     def recv_thread(self, streamTCPSocket:StreamTCPSocket, logic:Logic):
+        print("recv thread started")
         while True:
             time.sleep(0.2)
             dict_data = streamTCPSocket.receive()
             logic.recv_enque(dict_data=dict_data)
 
     def send_thread(self, streamTCPSocket:StreamTCPSocket, logic:Logic):
+        print("send thread started")
         while True:
             time.sleep(0.2)
             result = logic.isEmptySendQueue()

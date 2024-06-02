@@ -29,7 +29,7 @@ class CustomProtocol:
     def dict_to_string(self, dict_data:dict) -> str:
         try:
             string_data = ""
-            for value in dict_data.values:
+            for value in dict_data.values():
                 string_data += value
                 string_data += " "
         except Exception as e:
