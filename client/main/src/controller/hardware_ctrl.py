@@ -179,6 +179,7 @@ class Vibrater:
     def give_vib_feedback(self, distances = [DIST_THRESHOLD+1], flag = [False]):
         end_time=0
         while True:
+            print(flag)
             if not flag[0]:
                 time.sleep(1)
             else:
