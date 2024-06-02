@@ -22,20 +22,8 @@ class EmbeddedLogic:
         self.__beacon_network = BeaconNetwork()
         self.__harward_ctrl = HardwareCtrlClass()
         self.__target_location = ""
-        thread = Thread(target=self.start_logic)
+        thread = Thread(target=self.embedded_logic_thread)
         thread.start()
-
-    def start_logic(self):
-        print("logic 시작")
-        while True:
-            thread = Thread(target=self.embedded_logic_thread)
-            thread.start()
-            thread.join()
-            print("logic 종료됨")
-            print("logic 재시작 됨")
-            print("now _state : ", self.__now_state)
-            time.sleep(1)
-
         
     # send queue가 비어있는지 확인-> YES(1)/NO(0)로 응답(bool)
     def is_send_queue_empty(self)->bool:  # bool로 반환
@@ -146,7 +134,8 @@ class EmbeddedLogic:
             elif not dict_button_data['end_button'][0]:
                 self.__now_state == "default"
                 self.__harward_ctrl.set_vib_flag(False)
-                break
+                print("꺼진당 이거 완전 러키비키자낭~!")
+                return
 
             # button 3 function ??
             elif not dict_button_data['speak_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
@@ -163,7 +152,6 @@ class EmbeddedLogic:
                 time.sleep(1)
                 print(target_txt)
                 #self.__harward_ctrl.speaker_start(filename=filename)
-        return
 
     # convert :: text > wav file
     def __text_to_wav(self, data):
