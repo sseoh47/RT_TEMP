@@ -4,7 +4,7 @@ import threading
 import RPi.GPIO as GPIO
 
 class BUTTON:
-    CHUNK = 2048
+    CHUNK = 516
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
     RATE = 44100
