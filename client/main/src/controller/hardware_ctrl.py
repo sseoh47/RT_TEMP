@@ -90,8 +90,8 @@ class HardwareCtrlClass:
         button_thread = Thread(target=self.__button_thread)
         button_thread.start()
 
-        led_test_thread = Thread(target=self.__led_test_thread)
-        led_test_thread.start()
+        #led_test_thread = Thread(target=self.__led_test_thread)
+        #led_test_thread.start()
 
 
     # 이거 어케 하더라
