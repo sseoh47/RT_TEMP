@@ -144,6 +144,7 @@ class HardwareCtrlClass:
         GPIO.setup(MIC_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(SPEAK_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(END_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(VIB_PIN, GPIO.OUT)
         return
 
     def speaker_start(self, filename):
@@ -171,7 +172,6 @@ class HardwareCtrlClass:
 class Vibrater:
     def __init__(self):
         #GPIO.setmode(GPIO.BCM)
-        GPIO.setup(VIB_PIN, GPIO.OUT)
         # 진동 사이클
         self.cycle = VIB_CYCLE #초
     
