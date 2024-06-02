@@ -112,6 +112,7 @@ class EmbeddedLogic:
                     self.__harward_ctrl.set_vib_distance(rssi)  # RSSI 거리에 따른 진동
 
                 send_data = {"root" : "BUS", "body": bname}
+                print("send data : ", send_data)
                 self.__send_enque(send_data)
 
                 result = self.__is_recv_queue_empty()
