@@ -131,9 +131,9 @@ class HardwareCtrlClass:
         return
     
     def button_pressed(self, button:list):
-        self.__end_button[0] = button[0]
+        self.__mic_button[0] = button[0]
         self.__speak_button[0] = button[1]
-        self.__mic_button[0] = button[2]
+        self.__end_button[0] = button[2]
         return
 
     def __make_button(self):
@@ -160,7 +160,7 @@ class HardwareCtrlClass:
         return dict_button_data
 
     def mic_func_start(self):
-        result = self.__mic.mic_record_on()
+        result = self.__mic.mic_record_on(self.__mic_button[0])
         return result
 
 
