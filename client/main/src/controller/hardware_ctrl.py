@@ -183,8 +183,6 @@ class Vibrater:
                 time.sleep(1)
             else:
             #distance=self.__find_min_dist(distances=distances)
-                print("now_dist : ", distances)
-                print("cycle : ", self.cycle)
                 if(self.__check_distance(abs(distances[0]))):
                     now_time=time.time()
                     if(now_time-end_time>self.cycle):
@@ -195,6 +193,7 @@ class Vibrater:
             
     # 진동 사이클 지정
     def __check_distance(self, distance):
+        print("now_dist : ", distance)
         if distance <= DIST_THRESHOLD and distance >= WARN_THRESHOLD:
             self.cycle = 3
         elif distance <= WARN_THRESHOLD and distance >= DANG_THRESHOLD:
@@ -206,6 +205,7 @@ class Vibrater:
         else:
             # 거리가 임계거리보다 크다면 False를 반환
             return False
+        print("cycle : ", self.cycle)
         # 거리가 임계거리보다 작다면 True를 반환
         return True
     

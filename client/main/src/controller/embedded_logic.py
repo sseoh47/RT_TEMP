@@ -33,6 +33,7 @@ class EmbeddedLogic:
             thread.join()
             print("logic 종료됨")
             print("logic 재시작 됨")
+            time.sleep(1)
 
         
     # send queue가 비어있는지 확인-> YES(1)/NO(0)로 응답(bool)
@@ -142,7 +143,7 @@ class EmbeddedLogic:
             
             # button 2 function :: end system
             elif not dict_button_data['end_button'][0]:
-                self.__now_state == "END"
+                self.__now_state == "default"
                 self.__harward_ctrl.set_vib_flag(False)
                 break
 
