@@ -11,7 +11,7 @@ class NetworkProvider:
         embedded_logic = EmbeddedLogic()
         
         client_socket = socket(AF_INET, SOCK_STREAM)
-        client_socket.connect(("127.0.0.1", 5000))
+        client_socket.connect(('172.20.10.4', 5000))
 
         streamTCPSocket = StreamTCPSocket(client_socket)
         protocol = CustomProtocol()
