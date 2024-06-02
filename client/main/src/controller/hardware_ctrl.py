@@ -31,7 +31,8 @@ class MIC_Class:
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
         self.RATE = 44100
-        self.WAVE_OUTPUT_FILENAME = r'./temp/sample.wav'
+        #self.WAVE_OUTPUT_FILENAME = r'./temp/sample.wav'
+        self.WAVE_OUTPUT_FILENAME = r'./../temp/sample.wav'
         self.frames = []
 
     def mic_record_on(self, button_state):
@@ -224,6 +225,9 @@ class Vibrater:
 
 
 
+if __name__ == "__main__":
+    ct = HardwareCtrlClass()
+    ct.mic_func_start()
 
 
     
