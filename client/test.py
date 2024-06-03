@@ -4,7 +4,7 @@ import pygame
 def text_to_speech():
     try:
         pygame.init()
-        pygame.mixer.music.load("./test.wav")
+        pygame.mixer.music.load("/home/hyelim/RT_TEMP/client/test.wav")
         #play
         pygame.mixer.music.play()
         print("*")
