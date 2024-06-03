@@ -143,7 +143,7 @@ class EmbeddedLogic:
                 filename = self.__text_to_wav(target_txt)
                 time.sleep(1)
                 print(target_txt)
-                self.__harward_ctrl.speaker_start(filename=filename)
+                # self.__harward_ctrl.speaker_start(filename=filename)
             
             elif not dict_button_data['speak_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
                 bname = self.__beacon_network.get_bus_beacon()
@@ -151,7 +151,7 @@ class EmbeddedLogic:
                 filename = self.__text_to_wav(target_txt)
                 time.sleep(1)
                 print(target_txt)
-                self.__harward_ctrl.speaker_start(filename=filename)
+                # self.__harward_ctrl.speaker_start(filename=filename)
 
     # convert :: text > wav file
     def __text_to_wav(self, data):
