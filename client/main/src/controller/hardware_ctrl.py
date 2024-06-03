@@ -5,6 +5,7 @@ import RPi.GPIO as GPIO
 import pygame
 import time
 import numpy as np
+import os
 
 # 진동 울리는 거리값
 DIST_THRESHOLD = 60
@@ -151,8 +152,16 @@ class HardwareCtrlClass:
         pygame.init()
         time.sleep(0.1)
         print("audio start : ", filename)
-        pygame.mixer.music.load(filename)
-        pygame.mixer.music.play()
+        # pygame.mixer.music.load(filename)
+        # pygame.mixer.music.play()
+             
+        os.environ["SDL_AUDIODRIVER"]="pulseaudio"
+        pygame.mixer.init(devicename='hw:1,0')
+
+        sound=pygame.mixer.Sound(filename)
+        sound.play()
+        pygame.time.wait(int(sound.get_length()*1000))
+        
         return
 
     def what_button_is_it(self):
