@@ -19,9 +19,9 @@ class SOUND:
             pygame.mixer.init(devicename='hw:1,0')
 
             sound=pygame.mixer.Sound(filename)
-            sound.play(
+            sound.play()
             pygame.time.wait(int(sound.get_length()*1000))
-            )            
+             
             # os.remove(filename)  # 재생 후 오디오 파일 삭제
         except Exception as e:
             print(f"Error in text_to_speech_pyaudio: {e}")
@@ -31,6 +31,6 @@ class SOUND:
         abs_path = os.path.abspath(wav_path)
         if os.path.exists(abs_path):
             print("*")
-            playsound(abs_path)
+            
         else:
             print(f"파일을 찾을 수 없습니다: {abs_path}")
