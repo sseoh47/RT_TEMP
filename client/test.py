@@ -6,6 +6,7 @@ def text_to_speech():
         pygame.init()
         # 볼륨 설정 (최대 1.0)
         pygame.mixer.music.set_volume(1.0)
+        print("동기화체크")
         pygame.mixer.music.load("/home/hyelim/RT_TEMP/client/test.wav")
         #play
         pygame.mixer.music.play()
