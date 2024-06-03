@@ -92,7 +92,7 @@ class EmbeddedLogic:
                         sentence_data = self.__make_sentence(data['body'])  # 입력받은 데이터로 사용자에게 알릴 문장 생성
                         filename=self.__text_to_wav(data=sentence_data)  # convert : txt > wav file
                         #self.__harward_ctrl.speaker_start(filename)  # speak
-                        os.system('sudo -u hyelim python speech_module.py')
+                        os.system('sudo -u hyelim python3 speech_module.py')
                         print(sentence_data)
                         self.__now_state = "BUS"  # 과정 2로 바꿔주기
 
@@ -147,7 +147,7 @@ class EmbeddedLogic:
                 time.sleep(1)
                 print(target_txt)
                 # self.__harward_ctrl.speaker_start(filename=filename)
-                os.system('sudo -u hyelim python speech_module.py')
+                os.system('sudo -u hyelim python3 speech_module.py')
             
             elif not dict_button_data['speak_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
                 bname = self.__beacon_network.get_bus_beacon()
@@ -155,7 +155,7 @@ class EmbeddedLogic:
                 filename = self.__text_to_wav(target_txt)
                 time.sleep(1)
                 print(target_txt)
-                os.system('sudo -u hyelim python speech_module.py')
+                os.system('sudo -u hyelim python3 speech_module.py')
                 # self.__harward_ctrl.speaker_start(filename=filename)
 
     # convert :: text > wav file
