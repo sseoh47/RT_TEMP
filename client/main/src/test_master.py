@@ -1,3 +1,3 @@
 import os
 
-os.system("sudo -u hyelim python speech_module.py")
+os.system("sudo -u hyelim python3 speech_module.py")
