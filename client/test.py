@@ -7,11 +7,13 @@ def text_to_speech():
             #filename = "./client/station.mp3"  # 임시 오디오 파일 이름
             # tts.save(filename)  # 오디오 파일로 저장
             pygame.init()
+            
+            pygame.mixer.music.load('./station.mp3')
             time.sleep(1)
 
-            pygame.mixer.music.load('./station.mp3')
             pygame.mixer.music.play()
             print("*")
+
             # pygame.mixer.music.load(filename)
             # pygame.mixer.music.play()
             # while pygame.mixer.music.get_busy():
