@@ -6,8 +6,10 @@ import RPi.GPIO as GPIO
 import json
 import requests
 import os
+import io
+from pydub import AudioSegment
 
-
+import math
 
 from gtts import gTTS
 #import speech_recognition as sr
@@ -119,6 +121,7 @@ class EmbeddedLogic:
 
             # button 1 function :: speak destination (== system input)
             if not dict_button_data['mic_button'][0]:
+                start=time.time()
                 self.__now_state = 'PATH'
                 result = self.__harward_ctrl.mic_func_start()
                 time.sleep(3)
@@ -131,38 +134,60 @@ class EmbeddedLogic:
                     "bname" : bname,
                     "target" : self.__target_location}
                 print(result_data)
+                end=time.time()
+                print(f"button1 ;; {end-start:.5f} sec")
                 self.__send_enque(result_data)
             
             # button 2 function :: end system
             elif not dict_button_data['end_button'][0]:
+                start=time.time()
                 self.__now_state == "default"
                 self.__harward_ctrl.set_vib_flag(False)
-                print("꺼진당 이거 완전 러키비키자낭~!")
+                end=time.time()
+                print(f"button2 ;; {end-start:.5f} sec")
+                print("*** Button 2 ON :: System OFF ***")
                 return
 
             # button 3 function ??
             elif not dict_button_data['speak_button'][0] and self.__now_state != "BUS":  # 현 상태가 버스 찾기 전일 때(== 과정 1 단계)
+                
+                start=time.time()
                 target_txt = "이 버스는 영남대 건너 정류장 입니다."
                 filename = self.__text_to_wav(target_txt)
                 time.sleep(1)
                 print(target_txt)
                 # self.__harward_ctrl.speaker_start(filename=filename)
+                end=time.time()
+                print(f"button3 ;; BUS STOP {end-start:.5f} sec")
                 os.system('sudo -u hyelim python3 speech_module.py')
             
             elif not dict_button_data['speak_button'][0] and self.__now_state == "BUS":  # 현 상태가 버스 찾는 중일 때(== 과정 2 단계)
+                
+                start=time.time()
                 bname = self.__beacon_network.get_bus_beacon()
                 target_txt = f"이 버스는 {bname}번 버스입니다"
                 filename = self.__text_to_wav(target_txt)
                 time.sleep(1)
                 print(target_txt)
+                end=time.time()
+                print(f"button3 ;; BUS {end-start:.5f} sec")
                 os.system('sudo -u hyelim python3 speech_module.py')
                 # self.__harward_ctrl.speaker_start(filename=filename)
 
     # convert :: text > wav file
     def __text_to_wav(self, data):
+        filename = "./temp/sample.wav"
         tts = gTTS(text=data, lang='ko', slow=False)  # 텍스트를 TTS 객체로 변환
-        filename = "./temp/sample.wav"  # 임시 오디오 파일 이름
-        tts.save(filename)  # 오디오 파일로 저장
+        mp3_fp = io.BytesIO()
+        tts.write_to_fp(mp3_fp)
+        mp3_fp.seek(0)
+
+        audio = AudioSegment.from_file(mp3_fp, format="mp3")
+        
+        audio = audio.set_frame_rate(24000)
+        audio = audio.set_sample_width(2)
+        audio.export(filename, format="wav")
+
         return filename
     
     # convert :: wav file > text

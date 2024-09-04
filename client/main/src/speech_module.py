@@ -1,10 +1,12 @@
 import time
 import pygame
+import os
 
 def text_to_speech():
+    os.system("pwd")
     try:
         pygame.mixer.init()
-        sounda = pygame.mixer.Sound("./temp/sample.wav")
+        sounda = pygame.mixer.Sound('./temp/sample.wav')
         sounda.play()
         pygame.time.wait(int(sounda.get_length() * 1000))
         
